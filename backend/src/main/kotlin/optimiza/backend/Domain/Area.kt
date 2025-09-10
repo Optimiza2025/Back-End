@@ -1,4 +1,4 @@
-package optimiza.Domain
+package optimiza.backend.Domain
 
 import jakarta.persistence.*
 
@@ -8,8 +8,8 @@ data class Area(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_area")
-    val id: Int,
+    val id: Int = 0,
 
     @Column(name = "nome_area", nullable = false, length = 100)
-    val nome: String
+    val nome: String = ""
 )

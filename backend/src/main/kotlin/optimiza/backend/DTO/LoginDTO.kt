@@ -1,4 +1,6 @@
-package optimiza.DTO
+package optimiza.backend.DTO
+
+import optimiza.backend.Domain.Area
 
 data class LoginRequest(
     val email: String,
@@ -8,7 +10,7 @@ data class LoginRequest(
 data class LoginResponse(
     val id: Int,
     val nome: String,
-    val email: String,
+    val area: Area,
 )
 
 data class Errologin(

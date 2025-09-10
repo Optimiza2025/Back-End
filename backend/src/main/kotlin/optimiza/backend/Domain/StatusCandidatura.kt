@@ -1,7 +1,7 @@
-package optimiza.Domain
+package optimiza.backend.Domain
 
 enum class StatusCandidatura {
-    `em analise`,
+    em_analise,
     aprovado,
     reprovado
 }

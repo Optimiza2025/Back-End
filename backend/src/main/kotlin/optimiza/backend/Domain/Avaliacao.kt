@@ -1,6 +1,7 @@
-package optimiza.Domain
+package optimiza.backend.Domain
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity
@@ -19,10 +20,10 @@ data class Avaliacao(
     @JoinColumn(name = "id_usuario_avaliador", nullable = false)
     val avaliador: Usuario,
 
-    val hard_skills: Double? = null,
-    val soft_skills: Double? = null,
-    val experiencia: Double? = null,
-    val cultura: Double? = null,
+    val hard_skills: BigDecimal? = null,
+    val soft_skills: BigDecimal? = null,
+    val experiencia: BigDecimal? = null,
+    val cultura: BigDecimal? = null,
 
     @Column(length = 100)
     val comentario: String? = null,

@@ -1,4 +1,4 @@
-package optimiza.Domain
+package optimiza.backend.Domain
 
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -33,6 +33,7 @@ data class Candidato(
     val email: String? = null,
 
     @Lob
+    @Column(columnDefinition = "TEXT")
     val curriculo: String? = null,
 
     @Column(name = "data_update")

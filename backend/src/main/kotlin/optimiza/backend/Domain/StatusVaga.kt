@@ -1,4 +1,4 @@
-package optimiza.Domain
+package optimiza.backend.Domain
 
 enum class StatusVaga {
     ativa,

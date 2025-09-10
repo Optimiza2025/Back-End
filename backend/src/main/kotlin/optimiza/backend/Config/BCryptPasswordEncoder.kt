@@ -1,4 +1,4 @@
-package optimiza.Config
+package optimiza.backend.Config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

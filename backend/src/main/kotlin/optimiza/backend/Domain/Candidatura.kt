@@ -1,6 +1,7 @@
-package optimiza.Domain
+package optimiza.backend.Domain
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "CANDIDATURA")
@@ -22,5 +23,5 @@ data class Candidatura(
     @Column(nullable = false)
     val status: StatusCandidatura,
 
-    val matching: Double? = null
+    val matching: BigDecimal? = null
 )
