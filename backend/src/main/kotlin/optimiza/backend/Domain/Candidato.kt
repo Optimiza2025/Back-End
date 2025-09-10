@@ -11,6 +11,7 @@ data class Candidato(
     @Column(name = "id_candidato")
     val id: Int,
 
+    @Column(columnDefinition = "TEXT")
     val experiencia: String? = null,
 
     @Column(name = "nivel_formacao")

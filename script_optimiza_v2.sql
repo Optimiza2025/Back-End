@@ -6,12 +6,6 @@ CREATE TABLE AREA (
     nome_area VARCHAR(100) NOT NULL
 );
 
--- INSERT INTO AREA (nome_area) VALUES ('Financeiro');
--- INSERT INTO AREA (nome_area) VALUES ('Recursos Humanos');
--- INSERT INTO AREA (nome_area) VALUES ('TI');
--- INSERT INTO AREA (nome_area) VALUES ('Marketing');
--- INSERT INTO AREA (nome_area) VALUES ('Operações');
-
 CREATE TABLE USUARIO (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
@@ -23,11 +17,10 @@ CREATE TABLE USUARIO (
     FOREIGN KEY (id_area) REFERENCES AREA(id_area) ON DELETE CASCADE
 );
 
- select *from VAGA;
 
 CREATE TABLE CANDIDATO (
     id_candidato INT AUTO_INCREMENT PRIMARY KEY,
-    experiencia VARCHAR(100),
+    experiencia TEXT,
     cargo VARCHAR(100),
     nivel_formacao ENUM(
         'Ensino_Fundamental_completo',
