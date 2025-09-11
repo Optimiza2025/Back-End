@@ -9,7 +9,10 @@ data class Candidato(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_candidato")
-    val id: Int,
+    val id: Int = 0,
+
+    @Column(length = 100)
+    val nome: String? = null,
 
     @Column(columnDefinition = "TEXT")
     val experiencia: String? = null,
@@ -28,7 +31,7 @@ data class Candidato(
     val idiomas: String? = null,
 
     @Enumerated(EnumType.STRING)
-    val status: StatusCandidato,
+    val status: StatusCandidato = StatusCandidato.Banco_de_talentos,
 
     @Column(unique = true, length = 150)
     val email: String? = null,

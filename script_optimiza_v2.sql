@@ -20,6 +20,7 @@ CREATE TABLE USUARIO (
 
 CREATE TABLE CANDIDATO (
     id_candidato INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
     experiencia TEXT,
     cargo VARCHAR(100),
     nivel_formacao ENUM(
