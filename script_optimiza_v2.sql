@@ -94,3 +94,13 @@ CREATE TABLE AVALIACAO (
     FOREIGN KEY (id_candidatura) REFERENCES CANDIDATURA(id_candidatura) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario_avaliador) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
+
+CREATE TABLE LayoutVagas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(100),
+    cargo VARCHAR(100),
+    experiencia_esperada TEXT,
+    nivel_formacao_esperada VARCHAR(150),
+    curso_esperado VARCHAR(150),
+    idiomas_esperados JSON
+);
