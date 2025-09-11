@@ -20,4 +20,10 @@ class VagaController(private val vagaService: VagaService) {
     @GetMapping("/{idVagas}")
     fun buscarVagaPorId(@PathVariable idVagas: Int): ResponseEntity<Any> =
         vagaService.buscarVagaPorId(idVagas)
+
+    @GetMapping("layout-vagas")
+    fun listarResumido() = vagaService.listarResumido()
+
+    @GetMapping("layout-vagas/{id}")
+    fun buscarPorId(@PathVariable id: Int) = vagaService.buscarPorId(id)
 }

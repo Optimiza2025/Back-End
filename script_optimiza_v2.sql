@@ -95,7 +95,7 @@ CREATE TABLE AVALIACAO (
     FOREIGN KEY (id_usuario_avaliador) REFERENCES USUARIO(id_usuario) ON DELETE CASCADE
 );
 
-CREATE TABLE LayoutVagas (
+CREATE TABLE Layout_Vagas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     titulo VARCHAR(100),
     cargo VARCHAR(100),

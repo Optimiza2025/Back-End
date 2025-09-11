@@ -35,3 +35,8 @@ data class VagaResumoResponse(
     val titulo: String,
     val cargo: String?
 )
+
+data class LayoutVagaResumoResponse(
+    val id: Int,
+    val titulo: String
+)

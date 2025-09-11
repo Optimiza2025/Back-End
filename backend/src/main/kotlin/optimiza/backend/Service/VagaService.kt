@@ -1,5 +1,6 @@
 package optimiza.backend.Service
 
+import optimiza.backend.DTO.LayoutVagaResumoResponse
 import optimiza.backend.DTO.VagaRequest
 import optimiza.backend.DTO.VagaResponse
 import optimiza.backend.DTO.VagaResumoResponse
@@ -8,6 +9,7 @@ import optimiza.backend.Domain.NivelFormacao
 import optimiza.backend.Domain.StatusVaga
 import optimiza.backend.Domain.Vaga
 import optimiza.backend.Repository.AreaRepository
+import optimiza.backend.Repository.LayoutVagasRepository
 import optimiza.backend.Repository.VagaRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -16,7 +18,8 @@ import java.time.LocalDate
 @Service
 class VagaService(
     private val vagaRepository: VagaRepository,
-    private val areaRepository: AreaRepository
+    private val areaRepository: AreaRepository,
+    private val layoutVagasRepository: LayoutVagasRepository
 ) {
     fun cadastrarVaga(request: VagaRequest): ResponseEntity<Any> {
 
@@ -91,5 +94,14 @@ class VagaService(
         } else {
             ResponseEntity.notFound().build()
         }
+    }
+
+    fun listarResumido(): List<LayoutVagaResumoResponse> =
+        layoutVagasRepository.findAll().map { LayoutVagaResumoResponse(it.id, it.titulo!!) }
+
+    fun buscarPorId(id: Int): ResponseEntity<Any> {
+        val layout = layoutVagasRepository.findById(id)
+        return if (layout.isPresent) ResponseEntity.ok(layout.get())
+        else ResponseEntity.notFound().build()
     }
 }
