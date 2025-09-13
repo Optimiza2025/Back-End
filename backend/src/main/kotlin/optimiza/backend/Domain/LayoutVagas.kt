@@ -6,7 +6,7 @@ import org.hibernate.annotations.Type
 
 
 @Entity
-@Table(name = "Layout_Vagas")
+@Table(name = "LAYOUT_VAGAS")
 data class LayoutVagas(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
