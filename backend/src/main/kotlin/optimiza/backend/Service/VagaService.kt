@@ -65,10 +65,22 @@ class VagaService(
         return ResponseEntity.status(201).body(response)
     }
 
-    fun listarVagasResumo(): ResponseEntity<Any> {
-        val lista = vagaRepository.findAll().map { VagaResumoResponse(it.titulo!!, it.cargo) }
+    fun listarVagasResumoPorArea(idArea: Int): ResponseEntity<Any> {
+        val area = areaRepository.findById(idArea).orElse(null)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "Área não encontrada"))
+
+        val lista = vagaRepository.findByAreaId(idArea).map {
+            VagaResumoResponse(
+                titulo = it.titulo ?: "",
+                cargo = it.cargo,
+                nivelFormacao = it.nivelFormacao,
+                idiomas = it.idiomas,
+                nomeArea = area.nome
+            )
+        }
         return ResponseEntity.ok(lista)
     }
+
 
     fun buscarVagaPorId(id: Int): ResponseEntity<Any> {
         val vaga = vagaRepository.findById(id)

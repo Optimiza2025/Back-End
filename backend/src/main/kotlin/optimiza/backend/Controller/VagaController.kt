@@ -14,8 +14,9 @@ class VagaController(private val vagaService: VagaService) {
         vagaService.cadastrarVaga(request)
 
     @GetMapping
-    fun listarVagasResumo(): ResponseEntity<Any> =
-        vagaService.listarVagasResumo()
+    fun listarVagasResumo(@RequestParam idArea: Int): ResponseEntity<Any>{
+        return vagaService.listarVagasResumoPorArea(idArea)
+    }
 
     @GetMapping("/{idVagas}")
     fun buscarVagaPorId(@PathVariable idVagas: Int): ResponseEntity<Any> =

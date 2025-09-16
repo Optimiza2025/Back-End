@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 
 
 @Repository
-interface VagaRepository : JpaRepository<Vaga, Int>
+interface VagaRepository : JpaRepository<Vaga, Int>{
+    fun findByAreaId(idArea: Int): List<Vaga>
+}
