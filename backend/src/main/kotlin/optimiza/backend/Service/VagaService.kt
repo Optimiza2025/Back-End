@@ -114,17 +114,19 @@ class VagaService(
 
     fun buscarPorId(id: Int): ResponseEntity<Any> {
         val layout = layoutVagasRepository.findById(id)
+        println(layout)
         return if (layout.isPresent) ResponseEntity.ok(layout.get())
         else ResponseEntity.notFound().build()
     }
 
     fun filtrarVagas(
+        idArea: Int,
         titulo: String?,
         cargo: String?,
         nivelFormacao: String?,
         idioma: String?
     ): ResponseEntity<Any> {
-        val vagas = vagaRepository.filtrarVagas(titulo, cargo, nivelFormacao, idioma)
+        val vagas = vagaRepository.filtrarVagas(idArea, titulo, cargo, nivelFormacao, idioma)
         val response = vagas.map {
             VagaResumoResponse(
                 titulo = it.titulo ?: "",

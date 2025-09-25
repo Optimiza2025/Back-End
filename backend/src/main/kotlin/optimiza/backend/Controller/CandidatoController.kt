@@ -17,18 +17,17 @@ class CandidatoController(private val candidatoService: CandidatoService) {
     fun buscarPorId(@PathVariable id: Int): ResponseEntity<Any> =
         candidatoService.buscarCandidatoPorId(id)
 
-    @GetMapping()
-    fun listarResumo(): ResponseEntity<Any> =
-        candidatoService.listarCandidatosResumo()
-
-    @GetMapping("/filtro")
-    fun filtrarCandidatos(
+    @GetMapping
+    fun listarOuFiltrarCandidatos(
         @RequestParam(required = false) nome: String?,
         @RequestParam(required = false) nivelFormacao: String?,
         @RequestParam(required = false) curso: String?,
         @RequestParam(required = false) status: String?
     ): ResponseEntity<Any> {
-        return candidatoService.filtrarCandidatos(nome, nivelFormacao, curso, status)
+        return if (nome == null && nivelFormacao == null && curso == null && status == null) {
+            candidatoService.listarCandidatosResumo()
+        } else {
+            candidatoService.filtrarCandidatos(nome, nivelFormacao, curso, status)
+        }
     }
-
 }

@@ -14,8 +14,18 @@ class VagaController(private val vagaService: VagaService) {
         vagaService.cadastrarVaga(request)
 
     @GetMapping
-    fun listarVagasResumo(@RequestParam idArea: Int): ResponseEntity<Any> {
-        return vagaService.listarVagasResumoPorArea(idArea)
+    fun listarOuFiltrarVagas(
+        @RequestParam idArea: Int,
+        @RequestParam(required = false) titulo: String?,
+        @RequestParam(required = false) cargo: String?,
+        @RequestParam(required = false) nivelFormacao: String?,
+        @RequestParam(required = false) idioma: String?
+    ): ResponseEntity<Any> {
+        return if (titulo == null && cargo == null && nivelFormacao == null && idioma == null) {
+            vagaService.listarVagasResumoPorArea(idArea)
+        } else {
+            vagaService.filtrarVagas(idArea,titulo, cargo, nivelFormacao, idioma)
+        }
     }
 
     @GetMapping("/{idVagas}")
@@ -23,18 +33,11 @@ class VagaController(private val vagaService: VagaService) {
         vagaService.buscarVagaPorId(idVagas)
 
     @GetMapping("layout-vagas")
-    fun listarResumido() = vagaService.listarResumido()
-
-    @GetMapping("layout-vagas/{id}")
-    fun buscarPorId(@PathVariable id: Int) = vagaService.buscarPorId(id)
-
-    @GetMapping("/filtro")
-    fun filtrarVagas(
-        @RequestParam(required = false) titulo: String?,
-        @RequestParam(required = false) cargo: String?,
-        @RequestParam(required = false) nivelFormacao: String?,
-        @RequestParam(required = false) idioma: String?
-    ): ResponseEntity<Any> {
-        return vagaService.filtrarVagas(titulo, cargo, nivelFormacao, idioma)
+    fun layoutVagas(@RequestParam(required = false) idLayoutVaga: Int?): ResponseEntity<Any> {
+        return if (idLayoutVaga != null) {
+            vagaService.buscarPorId(idLayoutVaga)
+        } else {
+            ResponseEntity.ok(vagaService.listarResumido())
+        }
     }
 }
