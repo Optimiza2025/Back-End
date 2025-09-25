@@ -1,13 +1,16 @@
 package optimiza.backend.DTO
 
+import optimiza.backend.Domain.NivelFormacao
+import optimiza.backend.Domain.StatusCandidato
+
 data class CandidatoRequest(
     val nome: String?,
     val experiencia: String?,
-    val nivelFormacao: String,
+    val nivelFormacao: NivelFormacao?,
     val instituicaoEnsino: String?,
     val curso: String?,
     val idiomas: Map<String, String>?,
-    val status: String,
+    val status: StatusCandidato?,
     val email: String,
     val curriculo: String?,
     val dataUpdate: String?
@@ -29,7 +32,7 @@ data class CandidatoResponse(
 
 data class CandidatoResumo(
     val nome: String,
-    val nivelFormacao: String,
+    val nivelFormacao: NivelFormacao?,
     val curso: String?,
-    val status: String
+    val status: StatusCandidato?
 )

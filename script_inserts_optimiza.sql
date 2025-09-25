@@ -4,7 +4,7 @@ INSERT INTO AREA (nome_area) VALUES ('Financeiro');
 INSERT INTO AREA (nome_area) VALUES ('Recursos Humanos');
 INSERT INTO AREA (nome_area) VALUES ('TI');
 INSERT INTO AREA (nome_area) VALUES ('Marketing');
-INSERT INTO AREA (nome_area) VALUES ('Operações');
+INSERT INTO AREA (nome_area) VALUES ('Operacoes');
 
 INSERT INTO CANDIDATO (
     nome, experiencia, cargo, nivel_formacao, instituicao_ensino, curso, idiomas, status, email, curriculo, data_update

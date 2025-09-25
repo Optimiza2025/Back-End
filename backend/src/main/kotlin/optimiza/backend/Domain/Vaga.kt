@@ -51,7 +51,7 @@ data class Vaga(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "etapa_vaga", nullable = false)
-    val etapaVaga: EtapaVaga = EtapaVaga.Aprovacao_RH,
+    val etapaVaga: EtapaVaga = EtapaVaga.Aguardando_aprovacao_RH,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

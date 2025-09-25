@@ -64,7 +64,7 @@ CREATE TABLE VAGA (
     data_abertura DATE,
     data_update DATE, 
     data_fechamento DATE,
-    etapa_vaga ENUM('Vaga_aberta', 'Aprovacao_RH', 'Entrevista_candidatos', 'Admissao_concluida') NOT NULL,
+    etapa_vaga ENUM('Aguardando_aprovacao_RH', 'Entrevista_candidatos', 'Admissao_concluida', 'Negada_RH') NOT NULL,
     status ENUM('ativa','concluida','encerrada') NOT NULL,
     id_area INT NOT NULL,
     FOREIGN KEY (id_area) REFERENCES AREA(id_area) ON DELETE CASCADE

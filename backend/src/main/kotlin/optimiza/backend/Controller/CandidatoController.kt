@@ -20,4 +20,15 @@ class CandidatoController(private val candidatoService: CandidatoService) {
     @GetMapping()
     fun listarResumo(): ResponseEntity<Any> =
         candidatoService.listarCandidatosResumo()
+
+    @GetMapping("/filtro")
+    fun filtrarCandidatos(
+        @RequestParam(required = false) nome: String?,
+        @RequestParam(required = false) nivelFormacao: String?,
+        @RequestParam(required = false) curso: String?,
+        @RequestParam(required = false) status: String?
+    ): ResponseEntity<Any> {
+        return candidatoService.filtrarCandidatos(nome, nivelFormacao, curso, status)
+    }
+
 }

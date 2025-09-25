@@ -1,13 +1,15 @@
 package optimiza.backend.DTO
 
+import optimiza.backend.Domain.EtapaVaga
 import optimiza.backend.Domain.NivelFormacao
+import optimiza.backend.Domain.StatusVaga
 import java.time.LocalDate
 
 data class VagaRequest(
     val titulo: String?,
     val cargo: String?,
     val experiencia: String?,
-    val nivelFormacao: String?,
+    val nivelFormacao: NivelFormacao?,
     val instituicaoEnsino: String?,
     val curso: String?,
     val idiomas: List<String>?,
@@ -37,6 +39,7 @@ data class VagaResumoResponse(
     val cargo: String?,
     val nivelFormacao: NivelFormacao?,
     val idiomas: List<String>?,
+    val etapaVaga: EtapaVaga?,
     val nomeArea: String?
 )
 

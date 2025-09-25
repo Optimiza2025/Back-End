@@ -26,11 +26,11 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
             val candidato = Candidato(
                 nome = request.nome,
                 experiencia = request.experiencia,
-                nivelFormacao = NivelFormacao.valueOf(request.nivelFormacao),
+                nivelFormacao = request.nivelFormacao,
                 instituicaoEnsino = request.instituicaoEnsino,
                 curso = request.curso,
                 idiomas = idiomasJson,
-                status = StatusCandidato.valueOf(request.status),
+                status = StatusCandidato.Banco_de_talentos,
                 email = request.email,
                 curriculo = request.curriculo,
                 dataUpdate = request.dataUpdate?.let { LocalDate.parse(it) }
@@ -83,11 +83,34 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
         val lista = candidatoRepository.findAll().map {
             CandidatoResumo(
                 nome = it.nome ?: "",
-                nivelFormacao = it.nivelFormacao?.name ?: "",
+                nivelFormacao = it.nivelFormacao,
                 curso = it.curso,
-                status = it.status.name
+                status = it.status
             )
         }
         return ResponseEntity.ok(lista)
     }
+
+    fun filtrarCandidatos(
+        nome: String?,
+        nivelFormacao: String?,
+        curso: String?,
+        status: String?
+    ): ResponseEntity<Any> {
+        return try {
+            val lista = candidatoRepository.filtrarCandidatos(nome, nivelFormacao, curso, status)
+                .map {
+                    CandidatoResumo(
+                        nome = it.nome ?: "",
+                        nivelFormacao = it.nivelFormacao,
+                        curso = it.curso,
+                        status = it.status
+                    )
+                }
+            ResponseEntity.ok(lista)
+        } catch (e: Exception) {
+            ResponseEntity.badRequest().body(ErrorResponse("Erro ao filtrar candidatos: ${e.message}"))
+        }
+    }
+
 }

@@ -30,7 +30,7 @@ class VagaService(
             titulo = request.titulo,
             cargo = request.cargo,
             experiencia = request.experiencia,
-            nivelFormacao = request.nivelFormacao?.let { NivelFormacao.valueOf(it) },
+            nivelFormacao = request.nivelFormacao,
             instituicaoEnsino = request.instituicaoEnsino,
             curso = request.curso,
             idiomas = request.idiomas,
@@ -38,7 +38,7 @@ class VagaService(
             dataAbertura = LocalDate.now(),
             dataUpdate = LocalDate.now(),
             dataFechamento = null,
-            etapaVaga = EtapaVaga.Aprovacao_RH,
+            etapaVaga = EtapaVaga.Aguardando_aprovacao_RH,
             status = StatusVaga.ativa,
             area = area
         )
@@ -75,6 +75,7 @@ class VagaService(
                 cargo = it.cargo,
                 nivelFormacao = it.nivelFormacao,
                 idiomas = it.idiomas,
+                etapaVaga = it.etapaVaga,
                 nomeArea = area.nome
             )
         }
@@ -116,4 +117,25 @@ class VagaService(
         return if (layout.isPresent) ResponseEntity.ok(layout.get())
         else ResponseEntity.notFound().build()
     }
+
+    fun filtrarVagas(
+        titulo: String?,
+        cargo: String?,
+        nivelFormacao: String?,
+        idioma: String?
+    ): ResponseEntity<Any> {
+        val vagas = vagaRepository.filtrarVagas(titulo, cargo, nivelFormacao, idioma)
+        val response = vagas.map {
+            VagaResumoResponse(
+                titulo = it.titulo ?: "",
+                cargo = it.cargo,
+                nivelFormacao = it.nivelFormacao,
+                idiomas = it.idiomas,
+                etapaVaga = it.etapaVaga,
+                nomeArea = it.area.nome
+            )
+        }
+        return ResponseEntity.ok(response)
+    }
+
 }
