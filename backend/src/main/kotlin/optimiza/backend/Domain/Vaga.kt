@@ -34,7 +34,7 @@ data class Vaga(
 
     @Type(value = JsonType::class)
     @Column(columnDefinition = "json")
-    val idiomas: List<String>? = null,
+    val idiomas: Map<String, String>? = null,
 
     @Type(value = JsonType::class)
     @Column(name = "palavras_chave", columnDefinition = "json")
@@ -51,7 +51,7 @@ data class Vaga(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "etapa_vaga", nullable = false)
-    val etapaVaga: EtapaVaga = EtapaVaga.Aguardando_aprovacao_RH,
+    val etapaVaga: EtapaVaga = EtapaVaga.Aguardando_aprovacao_rh,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -38,7 +38,7 @@ class VagaService(
             dataAbertura = LocalDate.now(),
             dataUpdate = LocalDate.now(),
             dataFechamento = null,
-            etapaVaga = EtapaVaga.Aguardando_aprovacao_RH,
+            etapaVaga = EtapaVaga.Aguardando_aprovacao_rh,
             status = StatusVaga.ativa,
             area = area
         )
@@ -138,6 +138,26 @@ class VagaService(
             )
         }
         return ResponseEntity.ok(response)
+    }
+
+    fun aprovarOuReprovarRh(idVaga: Int, aprovado: Boolean): ResponseEntity<Any> {
+        val vagaOpt = vagaRepository.findById(idVaga)
+        if (!vagaOpt.isPresent) return ResponseEntity.notFound().build()
+
+        val vaga = vagaOpt.get()
+
+        if (vaga.etapaVaga != EtapaVaga.Aguardando_aprovacao_rh) {
+            return ResponseEntity.badRequest().body(mapOf("error" to "Vaga não está aguardando aprovação do RH"))
+        }
+
+        val novaEtapa = if (aprovado) EtapaVaga.Entrevista_candidatos else EtapaVaga.Negada_rh
+
+        val novoStatus = if (novaEtapa == EtapaVaga.Negada_rh) StatusVaga.encerrada else StatusVaga.ativa
+
+        val vagaAtualizada = vaga.copy(etapaVaga = novaEtapa, status = novoStatus, dataUpdate = LocalDate.now())
+        vagaRepository.save(vagaAtualizada)
+
+        return ResponseEntity.ok(mapOf("message" to "Etapa atualizada para ${novaEtapa.name}"))
     }
 
 }

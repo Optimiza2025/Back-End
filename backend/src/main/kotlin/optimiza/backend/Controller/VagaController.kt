@@ -40,4 +40,12 @@ class VagaController(private val vagaService: VagaService) {
             ResponseEntity.ok(vagaService.listarResumido())
         }
     }
+
+    @PutMapping("/aprovacao-rh/{idVaga}")
+    fun aprovarOuReprovarRh(
+        @PathVariable idVaga: Int,
+        @RequestParam aprovado: Boolean
+    ): ResponseEntity<Any> =
+        vagaService.aprovarOuReprovarRh(idVaga, aprovado)
+
 }

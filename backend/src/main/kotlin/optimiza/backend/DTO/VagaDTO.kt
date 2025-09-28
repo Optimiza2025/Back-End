@@ -12,7 +12,7 @@ data class VagaRequest(
     val nivelFormacao: NivelFormacao?,
     val instituicaoEnsino: String?,
     val curso: String?,
-    val idiomas: List<String>?,
+    val idiomas: Map<String, String>?,
     val palavrasChave: List<String>?,
     val idArea: Int
 )
@@ -25,7 +25,7 @@ data class VagaResponse(
     val nivelFormacao: String?,
     val instituicaoEnsino: String?,
     val curso: String?,
-    val idiomas: List<String>?,
+    val idiomas: Map<String, String>?,
     val palavrasChave: List<String>?,
     val dataAbertura: LocalDate? = null,
     val dataUpdate: LocalDate? = null,
@@ -38,7 +38,7 @@ data class VagaResumoResponse(
     val titulo: String,
     val cargo: String?,
     val nivelFormacao: NivelFormacao?,
-    val idiomas: List<String>?,
+    val idiomas: Map<String, String>?,
     val etapaVaga: EtapaVaga?,
     val nomeArea: String?
 )

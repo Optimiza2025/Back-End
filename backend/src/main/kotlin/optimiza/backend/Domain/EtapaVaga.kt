@@ -1,8 +1,8 @@
 package optimiza.backend.Domain
 
 enum class EtapaVaga {
-    Aguardando_aprovacao_RH,
+    Aguardando_aprovacao_rh,
     Entrevista_candidatos,
     Admissao_concluida,
-    Negada_RH,
+    Negada_rh,
 }
