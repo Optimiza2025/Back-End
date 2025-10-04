@@ -17,6 +17,9 @@ data class Candidato(
     @Column(columnDefinition = "TEXT")
     val experiencia: String? = null,
 
+    @Column(length = 100)
+    val cargo: String? = null,
+
     @Column(name = "nivel_formacao")
     @Enumerated(EnumType.STRING)
     val nivelFormacao: NivelFormacao? = null,

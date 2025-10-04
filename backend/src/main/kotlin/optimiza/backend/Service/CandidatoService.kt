@@ -26,6 +26,7 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
             val candidato = Candidato(
                 nome = request.nome,
                 experiencia = request.experiencia,
+                cargo = request.cargo,
                 nivelFormacao = request.nivelFormacao,
                 instituicaoEnsino = request.instituicaoEnsino,
                 curso = request.curso,
@@ -35,12 +36,14 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
                 curriculo = request.curriculo,
                 dataUpdate = request.dataUpdate?.let { LocalDate.parse(it) }
             )
+
             val salvo = candidatoRepository.save(candidato)
             ResponseEntity.ok(
                 CandidatoResponse(
                     id = salvo.id,
                     nome = salvo.nome,
                     experiencia = salvo.experiencia,
+                    cargo = salvo.cargo,
                     nivelFormacao = salvo.nivelFormacao!!.name,
                     instituicaoEnsino = salvo.instituicaoEnsino,
                     curso = salvo.curso,
@@ -64,6 +67,7 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
                     id = candidato.id,
                     nome = candidato.nome,
                     experiencia = candidato.experiencia,
+                    cargo = candidato.cargo,
                     nivelFormacao = candidato.nivelFormacao?.name ?: "",
                     instituicaoEnsino = candidato.instituicaoEnsino,
                     curso = candidato.curso,

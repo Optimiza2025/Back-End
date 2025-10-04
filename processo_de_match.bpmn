@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.6.1">
+  <bpmn:process id="Process_CandidateMatch" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_RhApproves" name="RH Aprova Vaga">
+      <bpmn:outgoing>Flow_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_01" sourceRef="StartEvent_RhApproves" targetRef="Task_ApplyFilter" />
+    <bpmn:scriptTask id="Task_ApplyFilter" name="Aplicar Filtro Vital - Cargo">
+      <bpmn:incoming>Flow_01</bpmn:incoming>
+      <bpmn:outgoing>Flow_02</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_02" name="Candidatos Filtrados" sourceRef="Task_ApplyFilter" targetRef="Task_ValidateFormation" />
+    <bpmn:scriptTask id="Task_ValidateFormation" name="Validar Nível de Formação">
+      <bpmn:incoming>Flow_02</bpmn:incoming>
+      <bpmn:outgoing>Flow_03</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_03" sourceRef="Task_ValidateFormation" targetRef="Task_ValidateExperience" />
+    <bpmn:scriptTask id="Task_ValidateExperience" name="Validar Experiência">
+      <bpmn:incoming>Flow_03</bpmn:incoming>
+      <bpmn:outgoing>Flow_04</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_04" sourceRef="Task_ValidateExperience" targetRef="Task_ValidateLanguages" />
+    <bpmn:scriptTask id="Task_ValidateLanguages" name="Validar Idiomas JSON">
+      <bpmn:incoming>Flow_04</bpmn:incoming>
+      <bpmn:outgoing>Flow_05</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_05" sourceRef="Task_ValidateLanguages" targetRef="Task_ValidateKeywords" />
+    <bpmn:scriptTask id="Task_ValidateKeywords" name="Validar Palavras-chave JSON">
+      <bpmn:incoming>Flow_05</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xiv0wd</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_ValidateCourse" name="Validar Curso">
+      <bpmn:incoming>Flow_1xiv0wd</bpmn:incoming>
+      <bpmn:outgoing>Flow_1h3gwxg</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_ValidateTitle" name="Validar Título">
+      <bpmn:incoming>Flow_1h3gwxg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a5iv6t</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Task_CalculateScore" name="Calcular Score Final">
+      <bpmn:incoming>Flow_0a5iv6t</bpmn:incoming>
+      <bpmn:outgoing>Flow_09</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_09" sourceRef="Task_CalculateScore" targetRef="Task_SaveScore" />
+    <bpmn:serviceTask id="Task_SaveScore" name="Salvar Score + Detalhes JSON na Candidatura">
+      <bpmn:incoming>Flow_09</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_SaveScore" targetRef="EndEvent_MatchFinished" />
+    <bpmn:endEvent id="EndEvent_MatchFinished" name="Match Finalizado">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_GenerateReturn" name="Gerar Retorno para Gestor/RH">
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_DisplayResults" name="Exibir Campos com Match e Score Total">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_GenerateReturn" targetRef="Task_DisplayResults" />
+    <bpmn:endEvent id="EndEvent_ProcessComplete" name="Processo Concluído">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Task_DisplayResults" targetRef="EndEvent_ProcessComplete" />
+    <bpmn:sequenceFlow id="Flow_1xiv0wd" sourceRef="Task_ValidateKeywords" targetRef="Task_ValidateCourse" />
+    <bpmn:sequenceFlow id="Flow_1h3gwxg" sourceRef="Task_ValidateCourse" targetRef="Task_ValidateTitle" />
+    <bpmn:sequenceFlow id="Flow_0a5iv6t" sourceRef="Task_ValidateTitle" targetRef="Task_CalculateScore" />
+    <bpmn:textAnnotation id="Annotation_B">
+      <bpmn:text>Contém o valor exigido.
+
+Ex: vaga 'Backend Dev' → candidato 'Backend Developer'</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_B" sourceRef="Task_ApplyFilter" targetRef="Annotation_B" />
+    <bpmn:textAnnotation id="Annotation_C">
+      <bpmn:text>Formação: &gt;= exigida.
+
+Ex: vaga Ensino Médio, candidato Superior → 1</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_C" sourceRef="Task_ValidateFormation" targetRef="Annotation_C" />
+    <bpmn:textAnnotation id="Annotation_D">
+      <bpmn:text>Experiência: anos &gt;= exigido.
+
+Ex: vaga 3 anos, candidato 2 anos → 0</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_D" sourceRef="Task_ValidateExperience" targetRef="Annotation_D" />
+    <bpmn:textAnnotation id="Annotation_E">
+      <bpmn:text>Idiomas: proporção atingida + qualificação exigida.
+
+Ex: vaga Inglês B2 + Espanhol B2; candidato Inglês C1 + Espanhol B1 → 0.5</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_E" sourceRef="Task_ValidateLanguages" targetRef="Annotation_E" />
+    <bpmn:textAnnotation id="Annotation_F">
+      <bpmn:text>Palavras-chave: proporção encontrada.
+
+Ex: vaga exige 4, candidato tem 2 → 0.5</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_F" sourceRef="Task_ValidateKeywords" targetRef="Annotation_F" />
+    <bpmn:textAnnotation id="Annotation_I">
+      <bpmn:text>Score Final = soma/qtde campos.
+Ex: 5/7 → 71%</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_I" sourceRef="Task_CalculateScore" targetRef="Annotation_I" />
+    <bpmn:textAnnotation id="Annotation_J">
+      <bpmn:text>match_details JSON armazena pesos e resultados campo a campo.
+
+Ex: {'cargo':1,'formacao':1,'idiomas':0.5,...}</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_J" sourceRef="Task_SaveScore" targetRef="Annotation_J" />
+    <bpmn:textAnnotation id="Annotation_L">
+      <bpmn:text>Backend retorna uma listagem de acordo com a busca feita na tabela candidatura com base no id da Vaga, na tela de match criar uma opção de ver mais para que ao clicar seja realizado uma busca no id da candidatura onde será possível pegar os detalhes de cada campo e score total.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_L" sourceRef="Task_GenerateReturn" targetRef="Annotation_L" />
+    <bpmn:textAnnotation id="TextAnnotation_1klrt06">
+      <bpmn:text>Curso: similaridade.
+
+Ex: vaga 'Ciência da Computação', candidato 'Engenharia da Computação' → 0.7</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0l6ewnc" associationDirection="None" sourceRef="Task_ValidateCourse" targetRef="TextAnnotation_1klrt06" />
+    <bpmn:textAnnotation id="TextAnnotation_02rwgfn">
+      <bpmn:text>Título: similaridade.
+
+Ex: vaga 'Fullstack Dev', candidato 'Desenvolvedor Fullstack' → 1</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1mj9jbz" associationDirection="None" sourceRef="Task_ValidateTitle" targetRef="TextAnnotation_02rwgfn" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_CandidateMatch">
+      <bpmndi:BPMNShape id="Task_ApplyFilter_di" bpmnElement="Task_ApplyFilter">
+        <dc:Bounds x="270" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidateExperience_di" bpmnElement="Task_ValidateExperience">
+        <dc:Bounds x="710" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidateFormation_di" bpmnElement="Task_ValidateFormation">
+        <dc:Bounds x="515" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_RhApproves_di" bpmnElement="StartEvent_RhApproves" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="182" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="255" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidateLanguages_di" bpmnElement="Task_ValidateLanguages">
+        <dc:Bounds x="700" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidateKeywords_di" bpmnElement="Task_ValidateKeywords">
+        <dc:Bounds x="890" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidateCourse_di" bpmnElement="Task_ValidateCourse">
+        <dc:Bounds x="890" y="450" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ValidateTitle_di" bpmnElement="Task_ValidateTitle">
+        <dc:Bounds x="1080" y="450" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SaveScore_di" bpmnElement="Task_SaveScore">
+        <dc:Bounds x="1275" y="577" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_MatchFinished_di" bpmnElement="EndEvent_MatchFinished" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1492" y="599" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1468" y="575" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CalculateScore_di" bpmnElement="Task_CalculateScore">
+        <dc:Bounds x="1080" y="577" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DisplayResults_di" bpmnElement="Task_DisplayResults">
+        <dc:Bounds x="1410" y="720" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_ProcessComplete_di" bpmnElement="EndEvent_ProcessComplete" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1582" y="742" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1576" y="785" width="50" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_GenerateReturn_di" bpmnElement="Task_GenerateReturn">
+        <dc:Bounds x="1240" y="720" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_B_di" bpmnElement="Association_B">
+        <di:waypoint x="320" y="190" />
+        <di:waypoint x="320" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_C_di" bpmnElement="Association_C">
+        <di:waypoint x="565" y="190" />
+        <di:waypoint x="565" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_E_di" bpmnElement="Association_E">
+        <di:waypoint x="700" y="361" />
+        <di:waypoint x="640" y="363" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_F_di" bpmnElement="Association_F">
+        <di:waypoint x="968" y="320" />
+        <di:waypoint x="1006" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_D_di" bpmnElement="Association_D">
+        <di:waypoint x="757" y="190" />
+        <di:waypoint x="753" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0l6ewnc_di" bpmnElement="Association_0l6ewnc">
+        <di:waypoint x="890" y="495" />
+        <di:waypoint x="825" y="503" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1mj9jbz_di" bpmnElement="Association_1mj9jbz">
+        <di:waypoint x="1127" y="450" />
+        <di:waypoint x="1124" y="395" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_J_di" bpmnElement="Association_J">
+        <di:waypoint x="1349" y="577" />
+        <di:waypoint x="1379" y="526" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_I_di" bpmnElement="Association_I">
+        <di:waypoint x="1080" y="618" />
+        <di:waypoint x="1060" y="618" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_L_di" bpmnElement="Association_L">
+        <di:waypoint x="1264" y="800" />
+        <di:waypoint x="1232" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01_di" bpmnElement="Flow_01">
+        <di:waypoint x="218" y="230" />
+        <di:waypoint x="270" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02_di" bpmnElement="Flow_02">
+        <di:waypoint x="370" y="230" />
+        <di:waypoint x="515" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="411" y="196" width="57" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03_di" bpmnElement="Flow_03">
+        <di:waypoint x="615" y="230" />
+        <di:waypoint x="710" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04_di" bpmnElement="Flow_04">
+        <di:waypoint x="760" y="270" />
+        <di:waypoint x="760" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05_di" bpmnElement="Flow_05">
+        <di:waypoint x="800" y="360" />
+        <di:waypoint x="890" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09_di" bpmnElement="Flow_09">
+        <di:waypoint x="1180" y="617" />
+        <di:waypoint x="1275" y="617" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="1375" y="617" />
+        <di:waypoint x="1492" y="617" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12">
+        <di:waypoint x="1340" y="760" />
+        <di:waypoint x="1410" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13">
+        <di:waypoint x="1510" y="760" />
+        <di:waypoint x="1582" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_B_di" bpmnElement="Annotation_B">
+        <dc:Bounds x="270" y="80" width="200" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_C_di" bpmnElement="Annotation_C">
+        <dc:Bounds x="505" y="80" width="150" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_L_di" bpmnElement="Annotation_L">
+        <dc:Bounds x="1150" y="850" width="300" height="98" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_E_di" bpmnElement="Annotation_E">
+        <dc:Bounds x="370" y="328" width="270" height="84" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_F_di" bpmnElement="Annotation_F">
+        <dc:Bounds x="960" y="210" width="260" height="55" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_D_di" bpmnElement="Annotation_D">
+        <dc:Bounds x="690" y="80" width="190" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1xiv0wd_di" bpmnElement="Flow_1xiv0wd">
+        <di:waypoint x="940" y="400" />
+        <di:waypoint x="940" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1klrt06_di" bpmnElement="TextAnnotation_1klrt06">
+        <dc:Bounds x="560" y="470" width="265" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1h3gwxg_di" bpmnElement="Flow_1h3gwxg">
+        <di:waypoint x="990" y="490" />
+        <di:waypoint x="1080" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_02rwgfn_di" bpmnElement="TextAnnotation_02rwgfn">
+        <dc:Bounds x="1070" y="325" width="210" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_J_di" bpmnElement="Annotation_J">
+        <dc:Bounds x="1340" y="456" width="305" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0a5iv6t_di" bpmnElement="Flow_0a5iv6t">
+        <di:waypoint x="1130" y="530" />
+        <di:waypoint x="1130" y="577" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Annotation_I_di" bpmnElement="Annotation_I">
+        <dc:Bounds x="860" y="594" width="200" height="45" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

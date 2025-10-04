@@ -114,7 +114,6 @@ class VagaService(
 
     fun buscarPorId(id: Int): ResponseEntity<Any> {
         val layout = layoutVagasRepository.findById(id)
-        println(layout)
         return if (layout.isPresent) ResponseEntity.ok(layout.get())
         else ResponseEntity.notFound().build()
     }
