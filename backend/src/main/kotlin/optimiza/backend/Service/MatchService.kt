@@ -58,8 +58,6 @@ class MatchService(
             if (vaga.curso != null && candidato.curso?.contains(vaga.curso!!, true) == true) 1.0 else 0.0
         detalhes["instituicao_ensino"] = compararInstituicaoEnsino(vaga.instituicaoEnsino, candidato.instituicaoEnsino)
 
-        detalhes["titulo"] =
-            if (vaga.titulo != null && candidato.curriculo?.contains(vaga.titulo!!, true) == true) 1.0 else 0.0
 
         return detalhes
     }
