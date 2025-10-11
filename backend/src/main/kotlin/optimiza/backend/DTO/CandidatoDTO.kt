@@ -33,8 +33,18 @@ data class CandidatoResponse(
 )
 
 data class CandidatoResumo(
+    val id: Int,
     val nome: String,
     val nivelFormacao: NivelFormacao?,
     val curso: String?,
     val status: StatusCandidato?
+)
+
+data class CandidatoResumoBusca(
+    val id: Int,
+    val experiencia: String?,
+    val cargo: String?,
+    val instituicaoEnsino: String?,
+    val curso: String?,
+    val curriculo: String?
 )

@@ -5,7 +5,6 @@ import optimiza.backend.DTO.VagaRequest
 import optimiza.backend.DTO.VagaResponse
 import optimiza.backend.DTO.VagaResumoResponse
 import optimiza.backend.Domain.EtapaVaga
-import optimiza.backend.Domain.NivelFormacao
 import optimiza.backend.Domain.StatusVaga
 import optimiza.backend.Domain.Vaga
 import optimiza.backend.Repository.AreaRepository
@@ -82,26 +81,28 @@ class VagaService(
         return ResponseEntity.ok(lista)
     }
 
+    fun encontrarVagaPorId(id: Int): Vaga? {
+        return vagaRepository.findById(id).orElse(null)
+    }
 
     fun buscarVagaPorId(id: Int): ResponseEntity<Any> {
-        val vaga = vagaRepository.findById(id)
-        return if (vaga.isPresent) {
-            val it = vaga.get()
+        val vaga = encontrarVagaPorId(id)
+        return if (vaga != null) {
             val response = VagaResponse(
-                id = it.id,
-                titulo = it.titulo,
-                cargo = it.cargo,
-                experiencia = it.experiencia,
-                nivelFormacao = it.nivelFormacao?.name,
-                instituicaoEnsino = it.instituicaoEnsino,
-                curso = it.curso,
-                idiomas = it.idiomas,
-                palavrasChave = it.palavrasChave,
-                dataAbertura = it.dataAbertura,
-                dataUpdate = it.dataUpdate,
-                etapaVaga = it.etapaVaga.name,
-                status = it.status.name,
-                idArea = it.area.id
+                id = vaga.id,
+                titulo = vaga.titulo,
+                cargo = vaga.cargo,
+                experiencia = vaga.experiencia,
+                nivelFormacao = vaga.nivelFormacao?.name,
+                instituicaoEnsino = vaga.instituicaoEnsino,
+                curso = vaga.curso,
+                idiomas = vaga.idiomas,
+                palavrasChave = vaga.palavrasChave,
+                dataAbertura = vaga.dataAbertura,
+                dataUpdate = vaga.dataUpdate,
+                etapaVaga = vaga.etapaVaga.name,
+                status = vaga.status.name,
+                idArea = vaga.area.id
             )
             ResponseEntity.ok(response)
         } else {
@@ -158,5 +159,4 @@ class VagaService(
 
         return ResponseEntity.ok(mapOf("message" to "Etapa atualizada para ${novaEtapa.name}"))
     }
-
 }

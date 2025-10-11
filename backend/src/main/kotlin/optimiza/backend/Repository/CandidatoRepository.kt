@@ -1,11 +1,12 @@
 package optimiza.backend.Repository
 
+import optimiza.backend.DTO.CandidatoResumoBusca
 import optimiza.backend.Domain.Candidato
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
-interface CandidatoRepository : JpaRepository<Candidato, Int>{
+interface CandidatoRepository : JpaRepository<Candidato, Int> {
     @Query(
         value = """
         SELECT * FROM candidato c
@@ -22,5 +23,9 @@ interface CandidatoRepository : JpaRepository<Candidato, Int>{
         @Param("curso") curso: String?,
         @Param("status") status: String?
     ): List<Candidato>
+
+
+    @Query("SELECT NEW optimiza.backend.DTO.CandidatoResumoBusca(c.id, c.experiencia, c.cargo, c.instituicaoEnsino, c.curso, c.curriculo) FROM Candidato c")
+    fun buscarCamposResumidos(): List<CandidatoResumoBusca>
 
 }

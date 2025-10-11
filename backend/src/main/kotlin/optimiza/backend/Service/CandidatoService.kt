@@ -7,7 +7,6 @@ import optimiza.backend.DTO.CandidatoResponse
 import optimiza.backend.DTO.CandidatoResumo
 import optimiza.backend.DTO.ErrorResponse
 import optimiza.backend.Domain.Candidato
-import optimiza.backend.Domain.NivelFormacao
 import optimiza.backend.Domain.StatusCandidato
 import optimiza.backend.Repository.CandidatoRepository
 import org.springframework.http.ResponseEntity
@@ -59,8 +58,12 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
         }
     }
 
+    fun encontrarCandidatoPorId(id: Int): Candidato? {
+        return candidatoRepository.findById(id).orElse(null)
+    }
+
     fun buscarCandidatoPorId(id: Int): ResponseEntity<Any> {
-        val candidato = candidatoRepository.findById(id).orElse(null)
+        val candidato = encontrarCandidatoPorId(id)
         return if (candidato != null) {
             ResponseEntity.ok(
                 CandidatoResponse(
@@ -86,6 +89,7 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
     fun listarCandidatosResumo(): ResponseEntity<Any> {
         val lista = candidatoRepository.findAll().map {
             CandidatoResumo(
+                id = it.id,
                 nome = it.nome ?: "",
                 nivelFormacao = it.nivelFormacao,
                 curso = it.curso,
@@ -105,6 +109,7 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
             val lista = candidatoRepository.filtrarCandidatos(nome, nivelFormacao, curso, status)
                 .map {
                     CandidatoResumo(
+                        id = it.id,
                         nome = it.nome ?: "",
                         nivelFormacao = it.nivelFormacao,
                         curso = it.curso,
@@ -115,6 +120,27 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
         } catch (e: Exception) {
             ResponseEntity.badRequest().body(ErrorResponse("Erro ao filtrar candidatos: ${e.message}"))
         }
+    }
+
+    fun buscarCandidatosPorPalavrasChave(palavrasChave: List<String>): List<Candidato> {
+        val palavrasLower = palavrasChave.map { it.lowercase() }
+
+        val candidatosResumidos = candidatoRepository.buscarCamposResumidos()
+
+        val idsFiltrados = candidatosResumidos.filter { candidato ->
+            listOf(
+                candidato.experiencia,
+                candidato.cargo,
+                candidato.instituicaoEnsino,
+                candidato.curso,
+                candidato.curriculo
+            ).filterNotNull().any { campo ->
+                palavrasLower.any { palavra -> campo.lowercase().contains(palavra) }
+            }
+        }.map { it.id }
+
+        println(idsFiltrados)
+        return candidatoRepository.findAllById(idsFiltrados)
     }
 
 }

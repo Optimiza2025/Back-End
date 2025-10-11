@@ -1,13 +1,14 @@
 package optimiza.backend.Controller
 
 import optimiza.backend.DTO.VagaRequest
+import optimiza.backend.Service.MatchService
 import optimiza.backend.Service.VagaService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/vagas")
-class VagaController(private val vagaService: VagaService) {
+class VagaController(private val vagaService: VagaService, private val matchService: MatchService) {
 
     @PostMapping
     fun cadastrarVaga(@RequestBody request: VagaRequest): ResponseEntity<Any> =
@@ -48,4 +49,9 @@ class VagaController(private val vagaService: VagaService) {
     ): ResponseEntity<Any> =
         vagaService.aprovarOuReprovarRh(idVaga, aprovado)
 
+
+    @GetMapping("/teste-match/{idVaga}")
+    fun testeMatch (@PathVariable idVaga: Int) {
+        matchService.processarMatchParaVaga(idVaga)
+    }
 }

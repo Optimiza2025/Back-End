@@ -74,7 +74,7 @@ CREATE TABLE CANDIDATURA (
     id_candidatura INT AUTO_INCREMENT PRIMARY KEY,
     id_vaga INT NOT NULL,
     id_candidato INT NOT NULL,
-    status ENUM('em_análise','aprovado','reprovado') NOT NULL,
+    status ENUM('em_analise','aprovado','reprovado') NOT NULL,
     matching DECIMAL(5,2),
     matches JSON, 
     FOREIGN KEY (id_vaga) REFERENCES VAGA(id_vaga) ON DELETE CASCADE,
