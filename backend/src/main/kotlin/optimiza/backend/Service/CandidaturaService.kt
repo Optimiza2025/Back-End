@@ -1,10 +1,12 @@
 package optimiza.backend.Service
 
+import optimiza.backend.DTO.CandidaturaResponseDTO
 import optimiza.backend.Domain.Candidato
 import optimiza.backend.Domain.Candidatura
 import optimiza.backend.Domain.StatusCandidatura
 import optimiza.backend.Domain.Vaga
 import optimiza.backend.Repository.CandidaturaRepository
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -50,6 +52,35 @@ class CandidaturaService(
                 "Erro ao salvar candidatura: verifique se já existe uma candidatura para essa vaga e candidato. " +
                         "Detalhes: ${ex.message}"
             )
+        }
+    }
+
+
+    fun listarPorVaga(idVaga: Int): ResponseEntity<Any> {
+        return try {
+            val candidaturas = candidaturaRepository.listarPorVagaOrdenado(idVaga)
+
+            if (candidaturas.isEmpty()) {
+                return ResponseEntity.ok("Nenhuma candidatura encontrada para a vaga $idVaga.")
+            }
+
+            val resposta = candidaturas.map { candidatura ->
+                CandidaturaResponseDTO(
+                    idCandidatura = candidatura.id,
+                    idVaga = candidatura.vaga!!.id,
+                    idCandidato = candidatura.candidato!!.id,
+                    nomeCandidato = candidatura.candidato!!.nome,
+                    cargoCandidato = candidatura.candidato!!.cargo,
+                    status = candidatura.status.name,
+                    matching = candidatura.matching,
+                    matches = candidatura.matches
+                )
+            }
+
+            ResponseEntity.ok(resposta)
+        } catch (ex: Exception) {
+            ResponseEntity.internalServerError()
+                .body("Erro ao listar candidaturas da vaga $idVaga: ${ex.message}")
         }
     }
 }

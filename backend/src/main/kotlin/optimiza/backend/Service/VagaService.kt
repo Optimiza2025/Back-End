@@ -18,7 +18,7 @@ import java.time.LocalDate
 class VagaService(
     private val vagaRepository: VagaRepository,
     private val areaRepository: AreaRepository,
-    private val layoutVagasRepository: LayoutVagasRepository
+    private val layoutVagasRepository: LayoutVagasRepository,
 ) {
     fun cadastrarVaga(request: VagaRequest): ResponseEntity<Any> {
 
@@ -157,6 +157,6 @@ class VagaService(
         val vagaAtualizada = vaga.copy(etapaVaga = novaEtapa, status = novoStatus, dataUpdate = LocalDate.now())
         vagaRepository.save(vagaAtualizada)
 
-        return ResponseEntity.ok(mapOf("message" to "Etapa atualizada para ${novaEtapa.name}"))
+        return ResponseEntity.ok(mapOf("message" to "Etapa atualizada para ${novaEtapa.name} e Match com Candaditos Realizado"))
     }
 }

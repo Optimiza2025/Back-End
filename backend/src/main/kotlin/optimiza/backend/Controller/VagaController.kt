@@ -25,7 +25,7 @@ class VagaController(private val vagaService: VagaService, private val matchServ
         return if (titulo == null && cargo == null && nivelFormacao == null && idioma == null) {
             vagaService.listarVagasResumoPorArea(idArea)
         } else {
-            vagaService.filtrarVagas(idArea,titulo, cargo, nivelFormacao, idioma)
+            vagaService.filtrarVagas(idArea, titulo, cargo, nivelFormacao, idioma)
         }
     }
 
@@ -46,12 +46,17 @@ class VagaController(private val vagaService: VagaService, private val matchServ
     fun aprovarOuReprovarRh(
         @PathVariable idVaga: Int,
         @RequestParam aprovado: Boolean
-    ): ResponseEntity<Any> =
-        vagaService.aprovarOuReprovarRh(idVaga, aprovado)
+    ): ResponseEntity<Any> {
+        val response = vagaService.aprovarOuReprovarRh(idVaga, aprovado)
+
+        if (response == ResponseEntity.ok()) matchService.processarMatchParaVaga(idVaga)
+
+        return response
+    }
 
 
     @GetMapping("/teste-match/{idVaga}")
-    fun testeMatch (@PathVariable idVaga: Int) {
+    fun testeMatch(@PathVariable idVaga: Int) {
         matchService.processarMatchParaVaga(idVaga)
     }
 }
