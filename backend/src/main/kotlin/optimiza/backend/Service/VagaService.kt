@@ -76,7 +76,7 @@ class VagaService(
                     nivelFormacao = it.nivelFormacao,
                     idiomas = it.idiomas,
                     etapaVaga = it.etapaVaga,
-                    nomeArea = area.nome
+                    nomeArea = it.area.nome
                 )
             }
         } else {
