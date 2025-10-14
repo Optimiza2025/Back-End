@@ -3,6 +3,7 @@ package optimiza.backend.Controller
 import optimiza.backend.DTO.VagaRequest
 import optimiza.backend.Service.MatchService
 import optimiza.backend.Service.VagaService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -49,7 +50,9 @@ class VagaController(private val vagaService: VagaService, private val matchServ
     ): ResponseEntity<Any> {
         val response = vagaService.aprovarOuReprovarRh(idVaga, aprovado)
 
-        if (response == ResponseEntity.ok()) matchService.processarMatchParaVaga(idVaga)
+        if (response.statusCode == HttpStatus.OK) {
+            matchService.processarMatchParaVaga(idVaga)
+        }
 
         return response
     }
