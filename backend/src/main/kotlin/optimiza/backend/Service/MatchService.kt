@@ -16,40 +16,70 @@ class MatchService(
 ) {
 
     fun processarMatchParaVaga(idVaga: Int) {
-        println("Procurando pela Vaga")
+        println("Procurando pela Vaga...")
         val vaga = vagaService.encontrarVagaPorId(idVaga)
             ?: throw IllegalArgumentException("Vaga não encontrada para o ID $idVaga")
 
-        val palavrasChave = vaga.palavrasChave ?: emptyList()
-
-        println("Procurando candidatos por Palavras Chaves")
-        val candidatos = candidatoService.buscarCandidatosPorPalavrasChave(palavrasChave)
+        println("Iniciando funil de busca de candidatos para a vaga ${vaga.id}")
+        val candidatos = buscarCandidatosComFunil(vaga)
 
         if (candidatos.isEmpty()) {
-            println("Nenhum candidato encontrado com as palavras-chave da vaga ${vaga.id}.")
+            println("Nenhum candidato encontrado para a vaga ${vaga.id}, mesmo após o funil de busca.")
             return
         }
 
-        println("Antes do looping de marcar o score na Candidatura")
+        println("Total de candidatos após o funil: ${candidatos.size}")
+        println("Calculando score e salvando candidaturas...")
+
         candidatos.forEach { candidato ->
             val detalhes = calcularDetalhesMatch(vaga, candidato)
             val scoreFinal = detalhes.values.average().toBigDecimal()
 
-            println("Candidato ${candidato.nome} -> Score: ${(scoreFinal.multiply(BigDecimal(100))).toInt()}% Detalhes: $detalhes")
+            println("${candidato.nome} -> Score: ${(scoreFinal.multiply(BigDecimal(100))).toInt()}% | Detalhes: $detalhes")
 
             candidaturaService.salvarOuAtualizarCandidatura(
-                vaga = vaga,
-                candidato = candidato,
-                matching = scoreFinal,
-                matches = detalhes
+                vaga = vaga, candidato = candidato, matching = scoreFinal, matches = detalhes
             )
         }
+    }
+
+   private fun buscarCandidatosComFunil(vaga: Vaga): List<Candidato> {
+        val palavrasChave = vaga.palavrasChave ?: emptyList()
+        var candidatos = candidatoService.buscarCandidatosPorPalavrasChave(palavrasChave).toMutableList()
+
+        println("Etapa 1: ${candidatos.size} candidatos encontrados por palavras-chave.")
+        if (candidatos.size >= 10) return candidatos
+
+        // Etapa 2: Buscar por curso e formação
+        val candidatosPorCursoFormacao = candidatoService.buscarPorCursoEFormacao(vaga.curso, vaga.nivelFormacao)
+        println("Etapa 2: ${candidatosPorCursoFormacao.size} candidatos encontrados por curso/formação.")
+        candidatos.addAll(candidatosPorCursoFormacao)
+        candidatos = candidatos.distinctBy { it.id }.toMutableList()
+        if (candidatos.size >= 10) return candidatos
+
+        // Etapa 3: Buscar por cargos semelhantes (sinônimos)
+        val grupoVaga = encontrarGrupoDeSinonimos("${vaga.titulo ?: ""} ${vaga.cargo ?: ""}")
+        if (grupoVaga != null) {
+            val candidatosPorCargo = candidatoService.buscarPorCargosSemelhantes(grupoVaga)
+            println("Etapa 3: ${candidatosPorCargo.size} candidatos encontrados por cargos semelhantes.")
+            candidatos.addAll(candidatosPorCargo)
+            candidatos = candidatos.distinctBy { it.id }.toMutableList()
+        }
+        if (candidatos.size >= 10) return candidatos
+
+        // Etapa 4: Fallback — garantir pelo menos 10 candidatos
+        val restantes = 10 - candidatos.size
+        val adicionais = candidatoService.buscarCandidatosAleatorios(limit = restantes)
+        println("Etapa 4: Adicionados ${adicionais.size} candidatos aleatórios para completar o funil.")
+        candidatos.addAll(adicionais)
+
+        return candidatos.distinctBy { it.id }
     }
 
     fun calcularDetalhesMatch(vaga: Vaga, candidato: Candidato): Map<String, Double> {
         val detalhes = mutableMapOf<String, Double>()
 
-        detalhes["cargo"] =  compararCargoFlexivel(vaga, candidato)
+        detalhes["cargo"] = compararCargoFlexivel(vaga, candidato)
         detalhes["formacao"] = compararFormacao(vaga.nivelFormacao, candidato.nivelFormacao)
         detalhes["experiencia"] = compararExperiencia(vaga.experiencia, candidato.experiencia)
         detalhes["idiomas"] = compararIdiomas(vaga.idiomas, parseIdiomasJson(candidato.idiomas))
@@ -58,7 +88,6 @@ class MatchService(
             if (vaga.curso != null && candidato.curso?.contains(vaga.curso!!, true) == true) 1.0 else 0.0
         detalhes["instituicao_ensino"] = compararInstituicaoEnsino(vaga.instituicaoEnsino, candidato.instituicaoEnsino)
 
-
         return detalhes
     }
 
@@ -66,28 +95,17 @@ class MatchService(
         val textoVaga = ("${vaga.titulo ?: ""} ${vaga.cargo ?: ""}").trim().replace("\\s+".toRegex(), " ")
         val cargoCandidato = candidato.cargo?.trim()?.replace("\\s+".toRegex(), " ")
 
-        if (textoVaga.isBlank() || cargoCandidato.isNullOrBlank()) {
-            return 0.0
-        }
+        if (textoVaga.isBlank() || cargoCandidato.isNullOrBlank()) return 0.0
 
-        //Tenta encontrar um grupo de sinônimos para a vaga e para o candidato
         val grupoVaga = encontrarGrupoDeSinonimos(textoVaga)
         val grupoCandidato = encontrarGrupoDeSinonimos(cargoCandidato)
 
-        // Se ambos pertencem a um grupo, e o grupo é o MESMO, é um match semântico!
-        if (grupoVaga != null && grupoVaga == grupoCandidato) {
-            return 1.0
-        }
+        if (grupoVaga != null && grupoVaga == grupoCandidato) return 1.0
 
-        // Se não encontrou via sinônimos, usa a lógica original de contenção (fallback)
         val textoVagaLower = textoVaga.lowercase()
         val cargoCandidatoLower = cargoCandidato.lowercase()
 
-        return if (textoVagaLower.contains(cargoCandidatoLower) || cargoCandidatoLower.contains(textoVagaLower)) {
-            1.0
-        } else {
-            0.0
-        }
+        return if (textoVagaLower.contains(cargoCandidatoLower) || cargoCandidatoLower.contains(textoVagaLower)) 1.0 else 0.0
     }
 
     private fun compararFormacao(vagaFormacao: NivelFormacao?, candFormacao: NivelFormacao?): Double {
@@ -107,16 +125,11 @@ class MatchService(
     }
 
     private fun compararInstituicaoEnsino(vagaInstituicoes: String?, candInstituicao: String?): Double {
-        if (vagaInstituicoes.isNullOrBlank() || candInstituicao.isNullOrBlank()) {
-            return 0.0
-        }
+        if (vagaInstituicoes.isNullOrBlank() || candInstituicao.isNullOrBlank()) return 0.0
 
         val listaVaga = vagaInstituicoes.split(",").map { it.trim().lowercase() }
         val instituicaoCandidatoLower = candInstituicao.lowercase()
-
-        val match = listaVaga.any { instituicaoDaVaga -> instituicaoCandidatoLower.contains(instituicaoDaVaga) }
-
-        return if (match) 1.0 else 0.0
+        return if (listaVaga.any { instituicaoCandidatoLower.contains(it) }) 1.0 else 0.0
     }
 
     private fun compararExperiencia(vagaExp: String?, candExp: String?): Double {
@@ -138,10 +151,7 @@ class MatchService(
     private fun compararPalavrasChave(palavrasVaga: List<String>, candidato: Candidato): Double {
         if (palavrasVaga.isEmpty()) return 0.0
         val textoCandidato = listOfNotNull(
-            candidato.experiencia,
-            candidato.cargo,
-            candidato.curso,
-            candidato.curriculo
+            candidato.experiencia, candidato.cargo, candidato.curso, candidato.curriculo
         ).joinToString(" ").lowercase()
 
         val acertos = palavrasVaga.count { textoCandidato.contains(it.lowercase()) }
@@ -161,14 +171,11 @@ class MatchService(
 
     private fun encontrarGrupoDeSinonimos(textoDoCargo: String): Set<String>? {
         val textoLower = textoDoCargo.lowercase()
-        return dicionarioSinonimos.find { grupo ->
-            grupo.any { sinonimo -> textoLower.contains(sinonimo) }
-        }
+        return dicionarioSinonimos.find { grupo -> grupo.any { textoLower.contains(it) } }
     }
 
     // DICIONÁRIO DE SINÔNIMOS DE CARGOS
     private val dicionarioSinonimos: List<Set<String>> = listOf(
-        // Grupo 1: Desenvolvimento de Software (Backend & Geral)
         setOf(
             "desenvolvedor backend",
             "engenheiro de software",
@@ -178,58 +185,12 @@ class MatchService(
             "developer",
             "dev"
         ),
-
-        // Grupo 2: Desenvolvimento de Software (Frontend)
-        setOf(
-            "desenvolvedor frontend",
-            "frontend developer"
-        ),
-
-        // Grupo 3: Dados
-        setOf(
-            "cientista de dados",
-            "analista de dados",
-            "data scientist",
-            "data analyst"
-        ),
-
-        // Grupo 4: Qualidade de Software (QA)
-        setOf(
-            "qa engineer",
-            "analista de qa",
-            "quality assurance",
-            "tester",
-            "testador"
-        ),
-
-        // Grupo 5: Infraestrutura & DevOps
-        setOf(
-            "analista de infraestrutura",
-            "devops engineer",
-            "sysadmin",
-            "administrador de sistemas"
-        ),
-
-        // Grupo 6: Design de Produto
-        setOf(
-            "ui/ux designer",
-            "designer de interface",
-            "designer de experiência do usuário",
-            "product designer"
-        ),
-
-        // Grupo 7: Gestão de Produto
-        setOf(
-            "product manager",
-            "gerente de produto",
-            "pm"
-        ),
-
-        // Grupo 8: Suporte Técnico
-        setOf(
-            "suporte técnico",
-            "analista de suporte",
-            "help desk"
-        )
+        setOf("desenvolvedor frontend", "frontend developer"),
+        setOf("cientista de dados", "analista de dados", "data scientist", "data analyst"),
+        setOf("qa engineer", "analista de qa", "quality assurance", "tester", "testador"),
+        setOf("analista de infraestrutura", "devops engineer", "sysadmin", "administrador de sistemas"),
+        setOf("ui/ux designer", "designer de interface", "designer de experiência do usuário", "product designer"),
+        setOf("product manager", "gerente de produto", "pm"),
+        setOf("suporte técnico", "analista de suporte", "help desk")
     )
 }

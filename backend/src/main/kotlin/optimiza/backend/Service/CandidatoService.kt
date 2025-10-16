@@ -7,6 +7,7 @@ import optimiza.backend.DTO.CandidatoResponse
 import optimiza.backend.DTO.CandidatoResumo
 import optimiza.backend.DTO.ErrorResponse
 import optimiza.backend.Domain.Candidato
+import optimiza.backend.Domain.NivelFormacao
 import optimiza.backend.Domain.StatusCandidato
 import optimiza.backend.Repository.CandidatoRepository
 import org.springframework.http.ResponseEntity
@@ -142,5 +143,29 @@ class CandidatoService(private val candidatoRepository: CandidatoRepository) {
         println(idsFiltrados)
         return candidatoRepository.findAllById(idsFiltrados)
     }
+
+    fun buscarPorCursoEFormacao(curso: String?, nivelFormacao: NivelFormacao?): List<Candidato> {
+        if (curso.isNullOrBlank() && nivelFormacao == null) return emptyList()
+        return candidatoRepository.findAll().filter { c ->
+            (curso != null && c.curso?.contains(curso, true) == true) ||
+                    (nivelFormacao != null && c.nivelFormacao == nivelFormacao)
+        }
+    }
+
+    fun buscarPorCargosSemelhantes(grupoSinonimos: Set<String>): List<Candidato> {
+        val candidatos = candidatoRepository.buscarCamposResumidos()
+        val ids = candidatos.filter { c ->
+            grupoSinonimos.any { sinonimo ->
+                c.cargo?.lowercase()?.contains(sinonimo) == true
+            }
+        }.map { it.id }
+        return candidatoRepository.findAllById(ids)
+    }
+
+    fun buscarCandidatosAleatorios(limit: Int): List<Candidato> {
+        val todos = candidatoRepository.findAll()
+        return todos.shuffled().take(limit)
+    }
+
 
 }

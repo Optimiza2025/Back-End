@@ -1,6 +1,7 @@
 package optimiza.backend.Controller
 
 import optimiza.backend.DTO.VagaRequest
+import optimiza.backend.DTO.VagaResponse
 import optimiza.backend.Service.MatchService
 import optimiza.backend.Service.VagaService
 import org.springframework.http.HttpStatus
@@ -50,12 +51,20 @@ class VagaController(private val vagaService: VagaService, private val matchServ
     ): ResponseEntity<Any> {
         val response = vagaService.aprovarOuReprovarRh(idVaga, aprovado)
 
-        if (response.statusCode == HttpStatus.OK) {
+        val vagaResponse = response.body as? VagaResponse
+
+        val isEntrevista = vagaResponse?.etapaVaga.equals("Entrevista_candidatos", ignoreCase = true)
+
+        if (response.statusCode == HttpStatus.OK && isEntrevista) {
+            println("Iniciando processamento de match para a vaga ${vagaResponse?.id}")
             matchService.processarMatchParaVaga(idVaga)
+        } else {
+            println("Match não iniciado. Status: ${response.statusCode}, Etapa: ${vagaResponse?.etapaVaga}")
         }
 
         return response
     }
+
 
 
     @GetMapping("/teste-match/{idVaga}")

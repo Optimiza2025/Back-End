@@ -165,12 +165,28 @@ class VagaService(
         }
 
         val novaEtapa = if (aprovado) EtapaVaga.Entrevista_candidatos else EtapaVaga.Negada_rh
-
         val novoStatus = if (novaEtapa == EtapaVaga.Negada_rh) StatusVaga.encerrada else StatusVaga.ativa
 
         val vagaAtualizada = vaga.copy(etapaVaga = novaEtapa, status = novoStatus, dataUpdate = LocalDate.now())
-        vagaRepository.save(vagaAtualizada)
+        val salvo = vagaRepository.save(vagaAtualizada)
 
-        return ResponseEntity.ok(mapOf("message" to "Etapa atualizada para ${novaEtapa.name} e Match com Candaditos Realizado"))
+        val body = VagaResponse(
+            id = salvo.id,
+            titulo = salvo.titulo,
+            cargo = salvo.cargo,
+            experiencia = salvo.experiencia,
+            nivelFormacao = salvo.nivelFormacao?.name,
+            instituicaoEnsino = salvo.instituicaoEnsino,
+            curso = salvo.curso,
+            idiomas = salvo.idiomas,
+            palavrasChave = salvo.palavrasChave,
+            dataAbertura = salvo.dataAbertura,
+            dataUpdate = salvo.dataUpdate,
+            etapaVaga = salvo.etapaVaga.name,
+            status = salvo.status.name,
+            idArea = salvo.area.id
+        )
+
+        return ResponseEntity.ok(body)
     }
 }
