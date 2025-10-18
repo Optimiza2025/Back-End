@@ -35,4 +35,6 @@ data class Usuario(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_area", nullable = false)
     val area: Area = Area()
-)
+){
+    constructor() : this(0, "", "")
+}

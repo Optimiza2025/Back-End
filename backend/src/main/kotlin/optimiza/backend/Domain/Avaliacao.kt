@@ -30,4 +30,12 @@ data class Avaliacao(
 
     @Column(name = "data_avaliacao")
     val dataAvaliacao: LocalDate? = null
-)
+){
+    constructor() : this(
+        0,
+        Candidatura(),
+        Usuario(),
+        null, null, null, null,
+        null, null
+    )
+}

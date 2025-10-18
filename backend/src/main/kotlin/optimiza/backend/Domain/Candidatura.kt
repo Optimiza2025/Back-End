@@ -23,7 +23,7 @@ data class Candidatura(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status: StatusCandidatura,
+    var status: StatusCandidatura,
 
     val matching: BigDecimal? = null,
 
