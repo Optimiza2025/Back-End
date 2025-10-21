@@ -66,7 +66,6 @@ class VagaController(private val vagaService: VagaService, private val matchServ
     }
 
 
-
     @GetMapping("/teste-match/{idVaga}")
     fun testeMatch(@PathVariable idVaga: Int) {
         matchService.processarMatchParaVaga(idVaga)

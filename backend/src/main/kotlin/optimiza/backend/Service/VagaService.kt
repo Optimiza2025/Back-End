@@ -71,6 +71,7 @@ class VagaService(
         val lista = if (area.nome == "Recursos Humanos") {
             vagaRepository.findAll().map {
                 VagaResumoResponse(
+                    idVaga = it.id,
                     titulo = it.titulo ?: "",
                     cargo = it.cargo,
                     nivelFormacao = it.nivelFormacao,
@@ -82,6 +83,7 @@ class VagaService(
         } else {
             vagaRepository.findByAreaId(idArea).map {
                 VagaResumoResponse(
+                    idVaga = it.id,
                     titulo = it.titulo ?: "",
                     cargo = it.cargo,
                     nivelFormacao = it.nivelFormacao,
@@ -143,6 +145,7 @@ class VagaService(
         val vagas = vagaRepository.filtrarVagas(idArea, titulo, cargo, nivelFormacao, idioma)
         val response = vagas.map {
             VagaResumoResponse(
+                idVaga = it.id,
                 titulo = it.titulo ?: "",
                 cargo = it.cargo,
                 nivelFormacao = it.nivelFormacao,

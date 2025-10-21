@@ -35,6 +35,7 @@ data class VagaResponse(
 )
 
 data class VagaResumoResponse(
+    val idVaga: Int,
     val titulo: String,
     val cargo: String?,
     val nivelFormacao: NivelFormacao?,
