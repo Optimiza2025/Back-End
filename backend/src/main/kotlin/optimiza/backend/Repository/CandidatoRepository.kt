@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param
 interface CandidatoRepository : JpaRepository<Candidato, Int> {
     @Query(
         value = """
-        SELECT * FROM candidato c
+        SELECT * FROM CANDIDATO c
         WHERE (:nome IS NULL OR LOWER(c.nome) COLLATE utf8mb4_unicode_ci LIKE CONCAT('%', LOWER(:nome), '%'))
           AND (:nivelFormacao IS NULL OR LOWER(c.nivel_formacao) COLLATE utf8mb4_unicode_ci LIKE CONCAT('%', LOWER(:nivelFormacao), '%'))
           AND (:curso IS NULL OR LOWER(c.curso) COLLATE utf8mb4_unicode_ci LIKE CONCAT('%', LOWER(:curso), '%'))
