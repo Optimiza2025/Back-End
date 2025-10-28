@@ -9,7 +9,12 @@ import java.time.LocalDate
 interface CandidaturaRepository: JpaRepository<Candidatura, Int> {
     fun findByVagaIdAndCandidatoId(idVaga: Int, idCandidato: Int): Candidatura?
 
-    @Query(nativeQuery = true, value = "SELECT c FROM CANDIDATURA c WHERE c.vaga.id = :idVaga ORDER BY c.matching DESC")
+    @Query(nativeQuery = true, value = """
+            SELECT *
+            FROM CANDIDATURA
+            WHERE id_vaga = :idVaga
+            ORDER BY matching DESC
+        """)
     fun listarPorVagaOrdenado(@Param("idVaga") idVaga: Int): List<Candidatura>
 
     @Query(nativeQuery = true, value = """
