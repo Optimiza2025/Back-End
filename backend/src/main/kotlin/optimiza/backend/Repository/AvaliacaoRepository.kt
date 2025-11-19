@@ -9,7 +9,11 @@ import java.time.LocalDate
 
 @Repository
 interface AvaliacaoRepository : JpaRepository<Avaliacao, Int> {
-    fun findByCandidatura_Id(idCandidatura: Int): Avaliacao?
+    fun findByCandidatura_IdAndAvaliador_Id(
+        idCandidatura: Int,
+        idAvaliador: Int
+    ): Avaliacao?
+
     fun findByCandidatura_Candidato_Id(idCandidato: Int): List<Avaliacao>
 
     @Query(nativeQuery = true, value = """

@@ -32,7 +32,8 @@ class AvaliacaoService(
             .orElse(null) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(mapOf("error" to "Usuário avaliador não encontrado."))
 
-        val avaliacaoExistente = avaliacaoRepository.findByCandidatura_Id(candidatura.id)
+        val avaliacaoExistente = avaliacaoRepository
+            .findByCandidatura_IdAndAvaliador_Id(candidatura.id, request.idAvaliador)
 
         val avaliacao: Avaliacao = if (avaliacaoExistente != null) {
             val atualizada = avaliacaoExistente.copy(

@@ -21,6 +21,22 @@ INSERT INTO VAGA (
     curso, idiomas, palavras_chave, data_abertura, data_update, data_fechamento, 
     etapa_vaga, status, id_area
 ) VALUES 
+(1,
+ 'Analista de Sistemas Pleno',
+ 'Analista',
+ '3+ anos',
+ 'Ensino_superior_completo',
+ 'FGV',
+ 'Sistemas de Informação, Ciência da Computação ou Engenharia de Software',
+ '{"Inglês": "B2", "Português": "C2"}',
+ '["Modelagem de Sistemas", "Levantamento de Requisitos", "SQL", "APIs REST", "Documentação Técnica", "UML", "Scrum"]',
+ '2025-02-15',
+ '2025-04-10',
+ '2025-04-10',
+ 'Admissao_concluida',
+ 'concluida',
+ 1
+),
 (2, 'Analista Financeiro Pleno', 'Analista', '3+ anos', 'Ensino_superior_completo', 'FGV', 'Administração, Economia ou Contabilidade', '{"Inglês": "B2", "Português": "C2"}', '["Fluxo de Caixa", "Contas a Pagar", "Excel", "Power BI", "ERP"]', '2025-02-15', '2025-04-10', '2025-04-10', 'Admissao_concluida', 'concluida', 1),
 (3, 'Analista de RH Jr', 'Analista', '1+ ano', 'Ensino_superior_completo', 'Anhembi Morumbi', 'Psicologia, Administração ou Gestão de RH', '{"Inglês": "B1", "Português": "C2"}', '["Recrutamento", "Seleção", "Onboarding", "Folha de Pagamento"]', '2025-03-01', '2025-05-15', '2025-05-15', 'Negada_rh', 'encerrada', 2),
 (4, 'Business Partner', 'Coordenador', '5+ anos', 'Pos_graduacao', 'Insper', 'Gestão de Pessoas, Psicologia Organizacional ou Administração', '{"Inglês": "C1", "Português": "C2"}', '["Business Partner", "Gestão de Clima", "Desenvolvimento", "Liderança"]', '2025-04-05', '2025-04-05', NULL, 'Aguardando_aprovacao_rh', 'ativa', 2),
