@@ -1,0 +1,434 @@
+{
+	"info": {
+		"_postman_id": "b6a8f9c1-2d3e-4f5a-6b7c-8d9e0f1a2b3c",
+		"name": "Optimiza Backend - Data Controller",
+		"description": "Coleção para testes dos endpoints do DataController (Gestor e RH)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Utilitários",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Gestores (IDs)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/gestores",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"gestores"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Visão Gestor (Por Área)",
+			"item": [
+				{
+					"name": "Volume de Vagas por Mês",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/vagas/volume-por-mes?userId={{userId}}&inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"vagas",
+								"volume-por-mes"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vagas Fracassadas (KPI)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/vagas/fracassadas?userId={{userId}}&inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"vagas",
+								"fracassadas"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Média Matching",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/candidaturas/media-matching?userId={{userId}}&inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"candidaturas",
+								"media-matching"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Média Reprovação (Motivos)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/avaliacoes/media-reprovacao?userId={{userId}}&inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"avaliacoes",
+								"media-reprovacao"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Visão RH (Global)",
+			"item": [
+				{
+					"name": "1. Volume Vagas Global",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/rh/vagas/volume-global?inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"rh",
+								"vagas",
+								"volume-global"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Motivos Reprovação Global",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/rh/avaliacoes/media-reprovacao-global?inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"rh",
+								"avaliacoes",
+								"media-reprovacao-global"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Tempo Médio Contratação",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/rh/kpi/tempo-medio-contratacao?inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"rh",
+								"kpi",
+								"tempo-medio-contratacao"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Vagas Fracassadas Global",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/rh/vagas/fracassadas-global?inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"rh",
+								"vagas",
+								"fracassadas-global"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Volume Candidaturas Global",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/rh/candidaturas/volume-global?inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"rh",
+								"candidaturas",
+								"volume-global"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Recência Banco Talentos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/rh/kpi/recencia-banco",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"rh",
+								"kpi",
+								"recencia-banco"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Perfil Acadêmico Global",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/data/rh/candidatos/perfil-academico?inicio={{dataInicio}}&fim={{dataFim}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"data",
+								"rh",
+								"candidatos",
+								"perfil-academico"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "{{dataInicio}}"
+								},
+								{
+									"key": "fim",
+									"value": "{{dataFim}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/optimiza",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "dataInicio",
+			"value": "2024-01-01",
+			"type": "string"
+		},
+		{
+			"key": "dataFim",
+			"value": "2024-12-31",
+			"type": "string"
+		}
+	]
+}

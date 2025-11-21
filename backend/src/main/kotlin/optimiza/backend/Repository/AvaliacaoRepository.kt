@@ -32,4 +32,23 @@ interface AvaliacaoRepository : JpaRepository<Avaliacao, Int> {
           AND v.data_fechamento <= :fim
     """)
     fun getMediaReprovacao(userId: Int, inicio: LocalDate, fim: LocalDate): MediaReprovacaoView?
+
+    // --- DASHBOARD RH ---
+
+    // Principais Motivos de Reprovação (Visão Global)
+    @Query(nativeQuery = true, value = """
+        SELECT 
+            AVG(a.hard_skills) as avgHardSkills, 
+            AVG(a.soft_skills) as avgSoftSkills, 
+            AVG(a.experiencia) as avgExperiencia,
+            AVG(a.cultura) as avgCultura 
+        FROM AVALIACAO a
+        JOIN CANDIDATURA c ON a.id_candidatura = c.id_candidatura
+        JOIN VAGA v ON c.id_vaga = v.id_vaga 
+        WHERE c.status = 'reprovado' 
+          AND v.data_abertura >= :inicio 
+          AND (v.data_fechamento <= :fim OR v.data_fechamento IS NULL)
+    """)
+    fun getMediaReprovacaoGlobal(inicio: LocalDate, fim: LocalDate): MediaReprovacaoView?
+
 }

@@ -15,16 +15,18 @@ import java.time.LocalDate
 class DataController(
     private val dataService: DataService
 ) {
-
     /**
-     * Health Check - Agora retorna um JSON
+     * Health Check
      */
     @GetMapping
     fun healthCheck(): ResponseEntity<GrafanaHealthCheck> {
-        // Você precisa criar e retornar a instância do DTO
         val responseBody = GrafanaHealthCheck(message = mapOf("status" to "API Grafana OK"))
         return ResponseEntity.ok(responseBody)
     }
+
+    // =========================================================================
+    // ENDPOINTS GESTOR (FILTRADOS POR USER ID)
+    // =========================================================================
 
     @GetMapping("/gestores")
     fun getGestores(): ResponseEntity<List<String>> {
@@ -32,9 +34,6 @@ class DataController(
         return ResponseEntity.ok(data)
     }
 
-    /**
-     * Rota para buscar o volume de vagas por mês.
-     */
     @GetMapping("/vagas/volume-por-mes")
     fun getVolumeVagas(
         @RequestParam("userId") userId: Int,
@@ -45,9 +44,6 @@ class DataController(
         return ResponseEntity.ok(data)
     }
 
-    /**
-     * Rota para buscar o total de vagas fracassadas.
-     */
     @GetMapping("/vagas/fracassadas")
     fun getVagasFracassadas(
         @RequestParam("userId") userId: Int,
@@ -58,9 +54,6 @@ class DataController(
         return ResponseEntity.ok(data)
     }
 
-    /**
-     * Rota para buscar a média de matching.
-     */
     @GetMapping("/candidaturas/media-matching")
     fun getMediaMatching(
         @RequestParam("userId") userId: Int,
@@ -71,9 +64,6 @@ class DataController(
         return ResponseEntity.ok(data)
     }
 
-    /**
-     * Rota para buscar as médias de reprovação.
-     */
     @GetMapping("/avaliacoes/media-reprovacao")
     fun getMediaReprovacao(
         @RequestParam("userId") userId: Int,
@@ -81,6 +71,91 @@ class DataController(
         @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataFim: LocalDate
     ): ResponseEntity<List<Map<String, Any?>>> {
         val data = dataService.getMediaReprovacao(userId, dataInicio, dataFim)
+        return ResponseEntity.ok(data)
+    }
+
+    // =========================================================================
+    // ENDPOINTS RH VISÃO GLOBAL
+    // =========================================================================
+
+    /**
+     * Volume de Vagas Global (Mensal)
+     */
+    @GetMapping("/rh/vagas/volume-global")
+    fun getVolumeVagasGlobal(
+        @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataInicio: LocalDate,
+        @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataFim: LocalDate
+    ): ResponseEntity<List<Map<String, Any?>>> {
+        val data = dataService.getVolumeVagasGlobal(dataInicio, dataFim)
+        return ResponseEntity.ok(data)
+    }
+
+    /**
+     * Principais Motivos de Reprovação (Global)
+     */
+    @GetMapping("/rh/avaliacoes/media-reprovacao-global")
+    fun getMediaReprovacaoGlobal(
+        @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataInicio: LocalDate,
+        @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataFim: LocalDate
+    ): ResponseEntity<List<Map<String, Any?>>> {
+        val data = dataService.getMediaReprovacaoGlobal(dataInicio, dataFim)
+        return ResponseEntity.ok(data)
+    }
+
+    /**
+     * Tempo Médio de Contratação (Time to Fill)
+     */
+    @GetMapping("/rh/kpi/tempo-medio-contratacao")
+    fun getTempoMedioContratacao(
+        @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataInicio: LocalDate,
+        @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataFim: LocalDate
+    ): ResponseEntity<Map<String, Any?>> {
+        val data = dataService.getTempoMedioContratacao(dataInicio, dataFim)
+        return ResponseEntity.ok(data)
+    }
+
+    /**
+     * Volume de Vagas Fracassadas (Churn Global)
+     */
+    @GetMapping("/rh/vagas/fracassadas-global")
+    fun getVagasFracassadasGlobal(
+        @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataInicio: LocalDate,
+        @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataFim: LocalDate
+    ): ResponseEntity<Map<String, Any?>> {
+        val data = dataService.getVagasFracassadasGlobal(dataInicio, dataFim)
+        return ResponseEntity.ok(data)
+    }
+
+    /**
+     * Total de Candidaturas (Mensal)
+     */
+    @GetMapping("/rh/candidaturas/volume-global")
+    fun getVolumeCandidaturasGlobal(
+        @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataInicio: LocalDate,
+        @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataFim: LocalDate
+    ): ResponseEntity<List<Map<String, Any?>>> {
+        val data = dataService.getVolumeCandidaturasGlobal(dataInicio, dataFim)
+        return ResponseEntity.ok(data)
+    }
+
+    /**
+     * Recência do Banco de Talentos
+     */
+    @GetMapping("/rh/kpi/recencia-banco")
+    fun getRecenciaBancoTalentos(): ResponseEntity<Map<String, Any?>> {
+        val data = dataService.getRecenciaBancoTalentos()
+        return ResponseEntity.ok(data)
+    }
+
+    /**
+     * Perfil Acadêmico dos Inscritos
+     */
+    @GetMapping("/rh/candidatos/perfil-academico")
+    fun getPerfilAcademicoGlobal(
+        @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataInicio: LocalDate,
+        @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dataFim: LocalDate
+    ): ResponseEntity<List<Map<String, Any?>>> {
+        val data = dataService.getPerfilAcademicoGlobal(dataInicio, dataFim)
         return ResponseEntity.ok(data)
     }
 }

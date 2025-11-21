@@ -1,7 +1,6 @@
 SET @ID_USUARIO_LOGADO = 1;
-SET @DATA_INICIO = '2025-01-01';
+SET @DATA_INICIO = '2020-01-01';
 SET @DATA_FIM = '2025-12-31';
-
 
 -- Mostrar o volume de novas vagas que o gestor abriu ao longo do tempo.
 SELECT 
@@ -45,6 +44,3 @@ SELECT
       AND u.id_usuario = @ID_USUARIO_LOGADO
       AND v.data_abertura >= @DATA_INICIO
       AND v.data_fechamento <= @DATA_FIM;
-      
-      
-      

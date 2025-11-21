@@ -1,10 +1,12 @@
 package optimiza.backend.Repository
 
 import optimiza.backend.DTO.CandidatoResumoBusca
+import optimiza.backend.DTO.PerfilAcademicoView
 import optimiza.backend.Domain.Candidato
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.time.LocalDate
 
 interface CandidatoRepository : JpaRepository<Candidato, Int> {
     @Query(
@@ -27,5 +29,26 @@ interface CandidatoRepository : JpaRepository<Candidato, Int> {
 
     @Query("SELECT NEW optimiza.backend.DTO.CandidatoResumoBusca(c.id, c.experiencia, c.cargo, c.instituicaoEnsino, c.curso, c.curriculo) FROM Candidato c")
     fun buscarCamposResumidos(): List<CandidatoResumoBusca>
+
+    // Recência do Banco de Talentos
+    @Query(nativeQuery = true, value = """
+        SELECT AVG(DATEDIFF(CURDATE(), c.data_update)) 
+        FROM CANDIDATO c
+        WHERE c.status = 'Banco_de_talentos'
+    """)
+    fun getMediaRecenciaBancoTalentos(): Double?
+
+    // Perfil Acadêmico dos Inscritos
+    @Query(nativeQuery = true, value = """
+        SELECT c.nivel_formacao as nivelFormacao, COUNT(*) as total
+        FROM CANDIDATO c 
+        JOIN CANDIDATURA cand ON cand.id_candidato = c.id_candidato
+        JOIN VAGA v ON cand.id_vaga = v.id_vaga 
+        WHERE v.data_abertura >= :inicio 
+          AND (v.data_fechamento <= :fim OR v.data_fechamento IS NULL)
+        GROUP BY c.nivel_formacao 
+        ORDER BY c.nivel_formacao ASC
+    """)
+    fun getPerfilAcademicoGlobal(inicio: LocalDate, fim: LocalDate): List<PerfilAcademicoView>
 
 }

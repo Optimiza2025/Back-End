@@ -1,6 +1,6 @@
 package optimiza.backend.DTO
 
-// --- DTOs Genéricos para o formato de Tabela ---
+// --- DTOs para o retorno de QUERIES  ---
 
 data class GrafanaHealthCheck(
     val message: Map<String, String>
@@ -16,4 +16,30 @@ interface MediaReprovacaoView {
     fun getAvgSoftSkills(): Double?
     fun getAvgExperiencia(): Double?
     fun getAvgCultura(): Double?
+}
+
+/**
+ * Projeção para o Volume de Vagas Global
+ */
+interface VagasGlobalView {
+    fun getMesReferencia(): String
+    fun getNomeArea(): String
+    fun getStatus(): String
+    fun getNumVagas(): Long
+}
+
+/**
+ * Projeção para o Perfil Acadêmico
+ */
+interface PerfilAcademicoView {
+    fun getNivelFormacao(): String?
+    fun getTotal(): Long
+}
+
+/**
+ * Projeção para o Total de Candidaturas por Mês
+ */
+interface CandidaturasPorMesView {
+    fun getMesReferencia(): String
+    fun getTotalCandidaturas(): Long
 }

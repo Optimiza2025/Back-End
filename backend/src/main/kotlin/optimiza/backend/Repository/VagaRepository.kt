@@ -1,5 +1,6 @@
 package optimiza.backend.Repository
 
+import optimiza.backend.DTO.VagasGlobalView
 import optimiza.backend.DTO.VagasPorMesView
 import optimiza.backend.Domain.Vaga
 import org.springframework.data.jpa.repository.JpaRepository
@@ -63,5 +64,40 @@ interface VagaRepository : JpaRepository<Vaga, Int>{
     """)
     fun countVagasFracassadas(userId: Int, inicio: LocalDate, fim: LocalDate): Long
 
+    // --- DASHBOARD RH ---
 
+    // Volume de Vagas (Visão Mensal, Área, Status)
+    @Query(nativeQuery = true, value = """
+        SELECT 
+            DATE_FORMAT(v.data_abertura, '%Y-%m') as mesReferencia,
+            area.nome_area as nomeArea, 
+            v.status, 
+            COUNT(*) as numVagas 
+        FROM VAGA v 
+        JOIN AREA area ON v.id_area = area.id_area 
+        WHERE v.data_abertura BETWEEN :inicio AND :fim
+        GROUP BY mesReferencia, nomeArea, v.status
+        ORDER BY mesReferencia ASC, nomeArea ASC
+    """)
+    fun findVolumeVagasGlobal(inicio: LocalDate, fim: LocalDate): List<VagasGlobalView>
+
+    // Tempo Médio de Contratação (Time to Fill)
+    @Query(nativeQuery = true, value = """
+        SELECT AVG(DATEDIFF(v.data_fechamento, v.data_abertura)) 
+        FROM VAGA v
+        WHERE v.etapa_vaga = 'Admissao_concluida' 
+          AND v.status = 'concluida'
+          AND v.data_fechamento BETWEEN :inicio AND :fim
+    """)
+    fun getTempoMedioContratacao(inicio: LocalDate, fim: LocalDate): Double?
+
+    // Volume de Vagas "Fracassadas" Global (Churn)
+    @Query(nativeQuery = true, value = """
+        SELECT COUNT(*) 
+        FROM VAGA v
+        WHERE v.status = 'encerrada' 
+          AND v.etapa_vaga != 'Admissao_concluida' 
+          AND v.data_fechamento BETWEEN :inicio AND :fim
+    """)
+    fun countVagasFracassadasGlobal(inicio: LocalDate, fim: LocalDate): Long
 }
