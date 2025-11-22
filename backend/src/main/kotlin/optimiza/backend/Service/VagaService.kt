@@ -21,7 +21,6 @@ class VagaService(
     private val layoutVagasRepository: LayoutVagasRepository,
 ) {
     fun cadastrarVaga(request: VagaRequest): ResponseEntity<Any> {
-
         val area = areaRepository.findById(request.idArea).orElse(null)
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "Área não encontrada"))
 
@@ -43,25 +42,67 @@ class VagaService(
         )
 
         val salvo = vagaRepository.save(vaga)
+        return ResponseEntity.status(201).body(mapearParaResponse(salvo))
+    }
 
-        val response = VagaResponse(
-            id = salvo.id,
-            titulo = salvo.titulo,
-            cargo = salvo.cargo,
-            experiencia = salvo.experiencia,
-            nivelFormacao = salvo.nivelFormacao?.name,
-            instituicaoEnsino = salvo.instituicaoEnsino,
-            curso = salvo.curso,
-            idiomas = salvo.idiomas,
-            palavrasChave = salvo.palavrasChave,
-            dataAbertura = salvo.dataAbertura,
-            dataUpdate = salvo.dataUpdate,
-            etapaVaga = salvo.etapaVaga.name,
-            status = salvo.status.name,
-            idArea = salvo.area.id
+    fun atualizarVaga(idVaga: Int, request: VagaRequest): ResponseEntity<Any> {
+        val vagaOpt = vagaRepository.findById(idVaga)
+        if (vagaOpt.isEmpty) return ResponseEntity.notFound().build()
+
+        val area = areaRepository.findById(request.idArea).orElse(null)
+            ?: return ResponseEntity.badRequest().body(mapOf("error" to "Área não encontrada"))
+
+        val vagaExistente = vagaOpt.get()
+
+        // Atualiza os campos mantendo o ID, datas originais e status atual
+        val vagaAtualizada = vagaExistente.copy(
+            titulo = request.titulo,
+            cargo = request.cargo,
+            experiencia = request.experiencia,
+            nivelFormacao = request.nivelFormacao,
+            instituicaoEnsino = request.instituicaoEnsino,
+            curso = request.curso,
+            idiomas = request.idiomas,
+            palavrasChave = request.palavrasChave,
+            area = area,
+            dataUpdate = LocalDate.now()
         )
 
-        return ResponseEntity.status(201).body(response)
+        val salvo = vagaRepository.save(vagaAtualizada)
+        return ResponseEntity.ok(mapearParaResponse(salvo))
+    }
+
+    fun encerrarVaga(idVaga: Int): ResponseEntity<Any> {
+        val vagaOpt = vagaRepository.findById(idVaga)
+        if (vagaOpt.isEmpty) return ResponseEntity.notFound().build()
+
+        val vaga = vagaOpt.get()
+
+        val vagaEncerrada = vaga.copy(
+            status = StatusVaga.encerrada,
+            dataFechamento = LocalDate.now(),
+            dataUpdate = LocalDate.now()
+        )
+
+        val salvo = vagaRepository.save(vagaEncerrada)
+        return ResponseEntity.ok(mapearParaResponse(salvo))
+    }
+
+    fun concluirVaga(idVaga: Int): ResponseEntity<Any> {
+        val vagaOpt = vagaRepository.findById(idVaga)
+        if (vagaOpt.isEmpty) return ResponseEntity.notFound().build()
+
+        val vaga = vagaOpt.get()
+
+        val vagaConcluida = vaga.copy(
+            status = StatusVaga.concluida,
+            etapaVaga = EtapaVaga.Admissao_concluida,
+            dataFechamento = LocalDate.now(),
+            dataUpdate = LocalDate.now()
+        )
+
+        val salvo = vagaRepository.save(vagaConcluida)
+        return ResponseEntity.ok(mapearParaResponse(salvo))
     }
 
     fun listarVagasResumoPorArea(idArea: Int): ResponseEntity<Any> {
@@ -69,31 +110,10 @@ class VagaService(
             ?: return ResponseEntity.badRequest().body(mapOf("error" to "Área não encontrada"))
 
         val lista = if (area.nome == "Recursos Humanos") {
-            vagaRepository.findAll().map {
-                VagaResumoResponse(
-                    idVaga = it.id,
-                    titulo = it.titulo ?: "",
-                    cargo = it.cargo,
-                    nivelFormacao = it.nivelFormacao,
-                    idiomas = it.idiomas,
-                    etapaVaga = it.etapaVaga,
-                    nomeArea = it.area.nome
-                )
-            }
+            vagaRepository.findAll().map { mapearParaResumo(it, it.area.nome!!) }
         } else {
-            vagaRepository.findByAreaId(idArea).map {
-                VagaResumoResponse(
-                    idVaga = it.id,
-                    titulo = it.titulo ?: "",
-                    cargo = it.cargo,
-                    nivelFormacao = it.nivelFormacao,
-                    idiomas = it.idiomas,
-                    etapaVaga = it.etapaVaga,
-                    nomeArea = area.nome
-                )
-            }
+            vagaRepository.findByAreaId(idArea).map { mapearParaResumo(it, area.nome!!) }
         }
-
         return ResponseEntity.ok(lista)
     }
 
@@ -104,23 +124,7 @@ class VagaService(
     fun buscarVagaPorId(id: Int): ResponseEntity<Any> {
         val vaga = encontrarVagaPorId(id)
         return if (vaga != null) {
-            val response = VagaResponse(
-                id = vaga.id,
-                titulo = vaga.titulo,
-                cargo = vaga.cargo,
-                experiencia = vaga.experiencia,
-                nivelFormacao = vaga.nivelFormacao?.name,
-                instituicaoEnsino = vaga.instituicaoEnsino,
-                curso = vaga.curso,
-                idiomas = vaga.idiomas,
-                palavrasChave = vaga.palavrasChave,
-                dataAbertura = vaga.dataAbertura,
-                dataUpdate = vaga.dataUpdate,
-                etapaVaga = vaga.etapaVaga.name,
-                status = vaga.status.name,
-                idArea = vaga.area.id
-            )
-            ResponseEntity.ok(response)
+            ResponseEntity.ok(mapearParaResponse(vaga))
         } else {
             ResponseEntity.notFound().build()
         }
@@ -143,17 +147,7 @@ class VagaService(
         idioma: String?
     ): ResponseEntity<Any> {
         val vagas = vagaRepository.filtrarVagas(idArea, titulo, cargo, nivelFormacao, idioma)
-        val response = vagas.map {
-            VagaResumoResponse(
-                idVaga = it.id,
-                titulo = it.titulo ?: "",
-                cargo = it.cargo,
-                nivelFormacao = it.nivelFormacao,
-                idiomas = it.idiomas,
-                etapaVaga = it.etapaVaga,
-                nomeArea = it.area.nome
-            )
-        }
+        val response = vagas.map { mapearParaResumo(it, it.area.nome!!) }
         return ResponseEntity.ok(response)
     }
 
@@ -173,23 +167,38 @@ class VagaService(
         val vagaAtualizada = vaga.copy(etapaVaga = novaEtapa, status = novoStatus, dataUpdate = LocalDate.now())
         val salvo = vagaRepository.save(vagaAtualizada)
 
-        val body = VagaResponse(
-            id = salvo.id,
-            titulo = salvo.titulo,
-            cargo = salvo.cargo,
-            experiencia = salvo.experiencia,
-            nivelFormacao = salvo.nivelFormacao?.name,
-            instituicaoEnsino = salvo.instituicaoEnsino,
-            curso = salvo.curso,
-            idiomas = salvo.idiomas,
-            palavrasChave = salvo.palavrasChave,
-            dataAbertura = salvo.dataAbertura,
-            dataUpdate = salvo.dataUpdate,
-            etapaVaga = salvo.etapaVaga.name,
-            status = salvo.status.name,
-            idArea = salvo.area.id
-        )
+        return ResponseEntity.ok(mapearParaResponse(salvo))
+    }
 
-        return ResponseEntity.ok(body)
+    // --- MÉTODOS AUXILIARES (Para evitar duplicação de código) ---
+    private fun mapearParaResponse(vaga: Vaga): VagaResponse {
+        return VagaResponse(
+            id = vaga.id,
+            titulo = vaga.titulo,
+            cargo = vaga.cargo,
+            experiencia = vaga.experiencia,
+            nivelFormacao = vaga.nivelFormacao?.name,
+            instituicaoEnsino = vaga.instituicaoEnsino,
+            curso = vaga.curso,
+            idiomas = vaga.idiomas,
+            palavrasChave = vaga.palavrasChave,
+            dataAbertura = vaga.dataAbertura,
+            dataUpdate = vaga.dataUpdate,
+            etapaVaga = vaga.etapaVaga.name,
+            status = vaga.status.name,
+            idArea = vaga.area.id
+        )
+    }
+
+    private fun mapearParaResumo(vaga: Vaga, nomeArea: String): VagaResumoResponse {
+        return VagaResumoResponse(
+            idVaga = vaga.id,
+            titulo = vaga.titulo ?: "",
+            cargo = vaga.cargo,
+            nivelFormacao = vaga.nivelFormacao,
+            idiomas = vaga.idiomas,
+            etapaVaga = vaga.etapaVaga,
+            nomeArea = nomeArea
+        )
     }
 }

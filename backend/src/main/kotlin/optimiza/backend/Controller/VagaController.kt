@@ -16,6 +16,24 @@ class VagaController(private val vagaService: VagaService, private val matchServ
     fun cadastrarVaga(@RequestBody request: VagaRequest): ResponseEntity<Any> =
         vagaService.cadastrarVaga(request)
 
+    @PutMapping("/{idVaga}")
+    fun atualizarVaga(
+        @PathVariable idVaga: Int,
+        @RequestBody request: VagaRequest
+    ): ResponseEntity<Any> {
+        return vagaService.atualizarVaga(idVaga, request)
+    }
+
+    @PutMapping("/{idVaga}/encerrar")
+    fun encerrarVaga(@PathVariable idVaga: Int): ResponseEntity<Any> {
+        return vagaService.encerrarVaga(idVaga)
+    }
+
+    @PutMapping("/{idVaga}/concluir")
+    fun concluirVaga(@PathVariable idVaga: Int): ResponseEntity<Any> {
+        return vagaService.concluirVaga(idVaga)
+    }
+
     @GetMapping
     fun listarOuFiltrarVagas(
         @RequestParam idArea: Int,
