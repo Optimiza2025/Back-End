@@ -114,12 +114,22 @@ class DataService(
     }
 
     /**
-     * Recência do Banco de Talentos (Hoje)
+     * Recência do Banco de Talentos
      */
     fun getRecenciaBancoTalentos(): Map<String, Any?> {
-        val mediaDias = candidatoRepository.getMediaRecenciaBancoTalentos() ?: 0.0
-        val formatted = (mediaDias * 10.0).roundToInt() / 10.0
-        return mapOf("MediaDiasSemAtualizar" to formatted)
+        val kpi = candidatoRepository.getKpiRecenciaCompleto()
+
+        val mediaDiasRaw = kpi?.getMediaDias() ?: 0.0
+        val diasDesdeUltima = kpi?.getDiasDesdeUltima() ?: 0
+        val ultimoNome = kpi?.getUltimoCandidato() ?: ""
+
+        val mediaFormatada = (mediaDiasRaw * 10.0).roundToInt() / 10.0
+
+        return mapOf(
+            "mediaDias" to mediaFormatada,
+            "diasDesdeUltimaAtividade" to diasDesdeUltima,
+            "nomeUltimoCandidato" to ultimoNome
+        )
     }
 
     /**

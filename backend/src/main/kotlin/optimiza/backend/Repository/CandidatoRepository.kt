@@ -8,6 +8,12 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDate
 
+interface RecenciaProjection {
+    fun getMediaDias(): Double?
+    fun getDiasDesdeUltima(): Int?
+    fun getUltimoCandidato(): String?
+}
+
 interface CandidatoRepository : JpaRepository<Candidato, Int> {
     @Query(
         value = """
@@ -37,6 +43,18 @@ interface CandidatoRepository : JpaRepository<Candidato, Int> {
         WHERE c.status = 'Banco_de_talentos'
     """)
     fun getMediaRecenciaBancoTalentos(): Double?
+
+    @Query(nativeQuery = true, value = """
+        SELECT 
+            AVG(DATEDIFF(CURDATE(), c.data_update)) as mediaDias,
+            DATEDIFF(CURDATE(), MAX(c.data_update)) as diasDesdeUltima,
+            (SELECT nome FROM OPTIMIZA.CANDIDATO 
+             WHERE status = 'Banco_de_talentos' 
+             ORDER BY data_update DESC LIMIT 1) as ultimoCandidato
+        FROM OPTIMIZA.CANDIDATO c
+        WHERE c.status = 'Banco_de_talentos'
+    """)
+    fun getKpiRecenciaCompleto(): RecenciaProjection?
 
     // Perfil Acadêmico dos Inscritos
     @Query(nativeQuery = true, value = """
