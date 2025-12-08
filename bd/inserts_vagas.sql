@@ -52,7 +52,7 @@ INSERT INTO VAGA (
  'Direito ou Administração',
  '{"Inglês": "B1", "Português": "C2"}',
  '["Compliance", "Riscos", "Controles Internos", "Políticas Corporativas"]',
- '2025-01-09', '2025-01-29', '2025-01-29', 'Negada_rh', 'concluida', 1);
+ '2025-01-09', '2025-01-29', '2025-01-29', 'Negada_rh', 'encerrada', 1);
 
 -- VAGAS FEVEREIRO
 INSERT INTO VAGA (
@@ -76,7 +76,7 @@ INSERT INTO VAGA (
  'Administração, Economia ou Contabilidade',
  '{"Inglês": "B1", "Português": "C2"}',
  '["Controles Internos", "Gestão Financeira", "Budget", "Excel"]',
- '2025-02-07', '2025-02-24', '2025-02-24', 'Negada_rh', 'concluida', 1),
+ '2025-02-07', '2025-02-24', '2025-02-24', 'Negada_rh', 'encerrada', 1),
 
 (21, 'Designer Gráfico', 'Designer', '2+ anos', 'Ensino_superior_completo', 'Belas Artes',
  'Design Gráfico',
@@ -112,7 +112,7 @@ INSERT INTO VAGA (
  'Administração, Economia ou Contabilidade',
  '{"Inglês": "B1", "Português": "C2"}',
  '["Fechamento Mensal", "Excel", "Forecast", "Orçamento"]',
- '2025-03-03', '2025-03-20', '2025-03-20', 'Negada_rh', 'concluida', 1),
+ '2025-03-03', '2025-03-20', '2025-03-20', 'Negada_rh', 'encerrada', 1),
 
 (26, 'Recrutador Tech', 'Analista', '2+ anos', 'Ensino_superior_completo', 'PUC',
  'Psicologia ou Recursos Humanos',
@@ -178,7 +178,7 @@ INSERT INTO VAGA (
  'Administração',
  '{"Português": "C2"}',
  '["Cotação", "Negociação", "ERP", "Fornecedores"]',
- '2025-04-02', '2025-04-18', '2025-04-18', 'Negada_rh', 'concluida', 5),
+ '2025-04-02', '2025-04-18', '2025-04-18', 'Negada_rh', 'encerrada', 5),
 
 (36, 'Analista de Folha de Pagamento', 'Analista', '2+ anos', 'Ensino_superior_completo', 'PUC',
  'Recursos Humanos ou Administração',
@@ -190,7 +190,7 @@ INSERT INTO VAGA (
  'Engenharia de Software',
  '{"Inglês": "B2", "Português": "C2"}',
  '["Java", "Microserviços", "DevOps", "APIs"]',
- '2025-04-05', '2025-04-23', '2025-04-23', 'Negada_rh', 'concluida', 3),
+ '2025-04-05', '2025-04-23', '2025-04-23', 'Negada_rh', 'encerrada', 3),
 
 (38, 'Especialista em Branding', 'Especialista', '4+ anos', 'Ensino_superior_completo', 'ESPM',
  'Marketing',
@@ -247,7 +247,7 @@ INSERT INTO VAGA (
  'Sistemas de Informação ou correlatos',
  '{"Inglês": "B1", "Português": "C2"}',
  '["Node.js", "API REST", "SQL", "Docker"]',
- '2025-05-05', '2025-05-23', '2025-05-23', 'Negada_rh', 'concluida', 3),
+ '2025-05-05', '2025-05-23', '2025-05-23', 'Negada_rh', 'encerrada', 3),
 
 -- MARKETING
 (46, 'Analista de Mídias Sociais', 'Analista', '2+ anos', 'Ensino_superior_completo', 'ESPM',
@@ -261,7 +261,7 @@ INSERT INTO VAGA (
  'Administração ou Logística',
  '{"Português": "C2"}',
  '["Gestão de Equipes", "KPIs", "Processos"]',
- '2025-05-08', '2025-05-27', '2025-05-27', 'Negada_rh', 'concluida', 5),
+ '2025-05-08', '2025-05-27', '2025-05-27', 'Negada_rh', 'encerrada', 5),
 
 -- TI 2 (para dar volume ao mês)
 (48, 'Analista de QA', 'Analista', '2+ anos', 'Ensino_superior_completo', 'USP',
@@ -316,7 +316,7 @@ INSERT INTO VAGA (
  'Logística ou Administração',
  '{"Português": "C2"}',
  '["WMS", "Distribuição", "Gestão de Equipes"]',
- '2025-06-07', '2025-07-03', '2025-07-03', 'Negada_rh', 'concluida', 5),
+ '2025-06-07', '2025-07-03', '2025-07-03', 'Negada_rh', 'encerrada', 5),
 
 -- TI 2
 (55, 'Analista de Suporte Pleno', 'Analista', '2+ anos', 'Ensino_superior_completo', 'FATEC',
@@ -346,7 +346,7 @@ INSERT INTO VAGA (
  'Administração ou Contabilidade',
  '{"Inglês": "B1", "Português": "C2"}',
  '["Orçamento", "Forecast", "DRE", "Planejamento Financeiro"]',
- '2025-08-04', '2025-08-28', '2025-08-28', 'Negada_rh', 'concluida', 1),
+ '2025-08-04', '2025-08-28', '2025-08-28', 'Negada_rh', 'encerrada', 1),
 
 -- RH
 (58, 'Business Partner de RH Jr', 'Analista', '2+ anos', 'Ensino_superior_completo', 'PUC',
@@ -367,21 +367,21 @@ INSERT INTO VAGA (
  'Publicidade e Propaganda',
  '{"Português": "C2"}',
  '["Mídias Sociais", "Engajamento", "Roteiro", "Conteúdo"]',
- '2025-08-07', '2025-09-01', '2025-09-01', 'Negada_rh', 'concluida', 4),
+ '2025-08-07', '2025-09-01', '2025-09-01', 'Negada_rh', 'encerrada', 4),
 
 -- OPERAÇÕES
 (61, 'Coordenador de Operações', 'Coordenador', '4+ anos', 'Ensino_superior_completo', 'Mackenzie',
  'Logística ou Engenharia de Produção',
  '{"Português": "C2"}',
  '["Gestão Operacional", "Processos", "KPIs"]',
- '2025-08-08', '2025-09-02', '2025-09-02', 'Negada_rh', 'concluida', 5),
+ '2025-08-08', '2025-09-02', '2025-09-02', 'Negada_rh', 'encerrada', 5),
 
 -- TI 2
 (62, 'Analista de Segurança da Informação Jr', 'Analista', '1+ ano', 'Ensino_superior_completo', 'FIAP',
  'Segurança da Informação',
  '{"Inglês": "A2", "Português": "C2"}',
  '["Pentest Básico", "Vulnerabilidades", "Ferramentas SIEM"]',
- '2025-08-11', '2025-09-04', '2025-09-04', 'Negada_rh', 'concluida', 3),
+ '2025-08-11', '2025-09-04', '2025-09-04', 'Negada_rh', 'encerrada', 3),
 
 -- FINANCEIRO 2
 (63, 'Assistente Contábil', 'Assistente', '1 ano', 'Ensino_medio_completo', 'ETEC',
@@ -429,7 +429,7 @@ INSERT INTO VAGA (
  'Engenharia de Produção ou Logística',
  '{"Português": "C2"}',
  '["Planejamento", "Processos", "KPIs"]',
- '2025-09-08', '2025-10-02', '2025-09-28', 'Negada_rh', 'concluida', 5),
+ '2025-09-08', '2025-10-02', '2025-09-28', 'Negada_rh', 'encerrada', 5),
 
 -- TI 2
 (69, 'Administrador de Banco de Dados (DBA)', 'Administrador', '3+ anos', 'Ensino_superior_completo', 'USP',
@@ -470,7 +470,7 @@ INSERT INTO VAGA (
  'Ciência da Computação ou correlatos',
  '{"Inglês": "B1", "Português": "C2"}',
  '["Java", "Spring", "APIs", "SQL"]',
- '2025-10-06', '2025-10-25', '2025-10-25', 'Negada_rh', 'concluida', 3),
+ '2025-10-06', '2025-10-25', '2025-10-25', 'Negada_rh', 'encerrada', 3),
 
 -- MARKETING
 (74, 'Designer Gráfico Pleno', 'Designer', '2+ anos', 'Ensino_superior_completo', 'ESPM',
@@ -513,7 +513,7 @@ INSERT INTO VAGA (
  'Administração ou Economia',
  '{"Português": "C2"}',
  '["Fluxo de Caixa", "Contas a Pagar", "Budget"]',
- '2025-11-12', '2025-12-06', '2025-12-06', 'Aguardando_aprovacao_rh', 'concluida', 1),
+ '2025-11-12', '2025-12-06', '2025-12-06', 'Aguardando_aprovacao_rh', 'ativa', 1),
 
 -- RH
 (79, 'Business Partner Jr', 'Analista', '1+ ano', 'Ensino_superior_completo', 'PUC',
@@ -527,7 +527,7 @@ INSERT INTO VAGA (
  'Sistemas de Informação',
  '{"Inglês": "B1", "Português": "C2"}',
  '["JavaScript", "React", "Node.js"]',
- '2025-11-10', '2025-12-04', '2025-12-04', 'Entrevista_candidatos', 'concluida', 3),
+ '2025-11-10', '2025-12-04', '2025-12-04', 'Entrevista_candidatos', 'ativa', 3),
 
 -- MARKETING
 (81, 'Analista de Conteúdo Pleno', 'Analista', '2+ anos', 'Ensino_superior_completo', 'ESPM',
@@ -541,11 +541,11 @@ INSERT INTO VAGA (
  'Engenharia de Produção',
  '{"Português": "C2"}',
  '["KPIs", "Gestão de Equipes", "Processos Operacionais"]',
- '2025-11-08', '2025-12-02', '2025-12-02', 'Aguardando_aprovacao_rh', 'concluida', 5),
+ '2025-11-08', '2025-12-02', '2025-12-02', 'Aguardando_aprovacao_rh', 'ativa', 5),
 
 -- TI 2
 (83, 'Analista de Redes Pleno', 'Analista', '2+ anos', 'Ensino_superior_completo', 'ETEC',
  'Redes de Computadores',
  '{"Inglês": "A2", "Português": "C2"}',
  '["Infraestrutura", "VPN", "Switches"]',
- '2025-11-07', '2025-12-01', '2025-12-01', 'Entrevista_candidatos', 'concluida', 3);
+ '2025-11-07', '2025-12-01', '2025-12-01', 'Entrevista_candidatos', 'ativa', 3);
